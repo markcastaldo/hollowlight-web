@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en"><head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PHT8BH2B72"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PHT8BH2B72');
+</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hollowlight playtests</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root { --bg:#120f18; --panel:#1d1826; --card:#231e2c; --line:#3a3446; --text:#ece4d6; --dim:#a39aae; --gold:#ffd65a;
+  --ember:#ffb04a; --teal:#8af0d0; --red:#ff7a6a; --violet:#b48cff; }
+* { box-sizing:border-box; }
+body { margin:0; color:var(--text); font:14.5px/1.5 Inter, system-ui, sans-serif; font-variant-numeric:tabular-nums;
+  background: radial-gradient(ellipse 1000px 500px at 50% -150px, #ffb04a22, transparent 70%), var(--bg); }
+a { color:var(--teal); }
+header { padding:22px 20px 10px; max-width:1280px; margin:0 auto; display:flex; flex-wrap:wrap; gap:10px 20px; align-items:flex-end; }
+h1 { font:400 28px/1.1 Silkscreen, monospace; color:var(--gold); margin:0; text-shadow:0 0 14px #ffb04a55, 2px 2px 0 #5a2d0c; }
+.sub { color:var(--dim); }
+.filters { display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; margin-left:auto; font-size:13px; }
+select, input[type=checkbox] { accent-color:var(--gold); }
+select { background:#0f0d14; color:var(--text); border:1px solid var(--line); padding:4px 6px; font:inherit; }
+main { max-width:1280px; margin:0 auto; padding:0 20px 60px; }
+.kpis { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin:14px 0 18px; }
+.kpi { background:var(--card); border:2px solid var(--line); padding:10px 12px; box-shadow:3px 3px 0 #0008; }
+.kpi b { display:block; font:600 24px Inter, system-ui, sans-serif; color:var(--gold); }
+.kpi span { color:var(--dim); font-size:12px; }
+section { background:var(--panel); border:2px solid var(--line); padding:14px 16px 16px; margin:0 0 16px; box-shadow:4px 4px 0 #0008; }
+h2 { font:400 16px Silkscreen, monospace; color:var(--ember); margin:0 0 4px; }
+.note { color:var(--dim); font-size:12.5px; margin:0 0 10px; }
+.grid2 { display:grid; grid-template-columns:repeat(auto-fit, minmax(420px, 1fr)); gap:14px; }
+.grid3 { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:14px; }
+.chart { position:relative; height:260px; }
+.chart.tall { height:320px; }
+h3 { font:600 14.5px Inter, system-ui, sans-serif; color:var(--gold); margin:0 0 6px; }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+th { text-align:left; color:var(--dim); font-weight:600; border-bottom:1px solid var(--line); padding:5px 6px; white-space:nowrap; cursor:pointer; }
+td { border-bottom:1px solid #2c2636; padding:5px 6px; white-space:nowrap; }
+tr.run:hover td { background:#2a2435; cursor:pointer; }
+tr.run.sel td { background:#3a2f1c; }
+tr.run.sel td:first-child { box-shadow: inset 3px 0 0 var(--gold); }
+#selbar { display:none; margin:0 0 14px; padding:8px 12px; background:#2a2435; border:2px solid var(--gold); color:var(--gold); }
+#selbar button { margin-left:10px; background:#1a1622; color:var(--gold); border:1px solid var(--gold); padding:2px 10px; cursor:pointer; font:inherit; }
+tr.sel td { background:#3a2f22; }
+.tag { display:inline-block; padding:0 6px; font-size:12px; font-weight:500; border:1px solid; }
+.tag.rose { color:#5cffd8; border-color:#5cffd8; }
+.won { color:var(--teal); } .lost { color:var(--red); } .live { color:var(--gold); }
+.scroll { overflow-x:auto; }
+.bar { height:8px; background:var(--ember); display:inline-block; vertical-align:middle; margin-right:6px; }
+#detail { display:none; }
+.pill { display:inline-block; background:#2a2435; border:1px solid var(--line); padding:1px 6px; margin:2px; font-size:12px; }
+.pill i { color:var(--dim); font-style:normal; }
+#status { color:var(--dim); }
+footer { text-align:center; color:var(--dim); font-size:12px; padding:0 20px 30px; }
+@media (max-width:600px) { .grid2, .grid3 { grid-template-columns:1fr; } header { padding:16px; } main { padding:0 12px 40px; } }
+</style></head><body>
+<header>
+  <div><h1>PLAYTEST DASHBOARD</h1><div class="sub">Hollowlight · every real run the game has logged · <span id="status">loading…</span></div></div>
+  <div class="filters">
+    <label>Version ≥ <select id="fver"></select></label>
+    <label>Difficulty <select id="fdiff"><option value="normal">Normal</option><option value="hard">Hard</option><option value="nightmare">Nightmare</option><option value="">All</option></select></label>
+    <label>Player <select id="fname"><option value="">Everyone</option></select></label>
+    <label><input type="checkbox" id="flive" checked> include runs in progress</label>
+    <label><input type="checkbox" id="fanon"> include anonymous runs</label>
+    <label><input type="checkbox" id="fallc"> all runs on charts (not just the newest 8)</label>
+  </div>
+</header>
+<main>
+<div id="selbar"></div>
+<div class="kpis" id="kpis"></div>
+
+<section><h2>Runs</h2><p class="note">Newest first. Click a run to focus the whole report on it (Ctrl / Shift-click to add more runs,
+click it again to clear). Its night-by-night breakdown opens below.</p>
+<div class="scroll"><table id="runs"></table></div></section>
+
+<section id="detail"><h2 id="dtitle"></h2><p class="note" id="dsub"></p>
+<div class="grid2"><div><h3>Hero level, threat and boss toughness</h3><div class="chart"><canvas id="dc1"></canvas></div></div>
+<div><h3>Lowest HP each night / day, and Hollowlight left</h3><div class="chart"><canvas id="dc2"></canvas></div></div></div>
+<div class="scroll" style="margin-top:12px"><table id="dnights"></table></div>
+<div class="grid3" style="margin-top:12px"><div><h3>Level-up picks</h3><div id="dpicks"></div></div><div><h3>Items</h3><div id="ditems"></div></div><div><h3>Boss clashes, titans, deaths</h3><div id="devents"></div></div></div>
+</section>
+
+<section><h2>Night by night</h2><p class="note">One line per run (filtered). How strong players get, how hard the Hollow pushes back, and how close nights get.</p>
+<div class="grid2">
+<div><h3>Hero level</h3><div class="chart"><canvas id="c_level"></canvas></div></div>
+<div><h3>Night threat (adaptive difficulty)</h3><div class="chart"><canvas id="c_threat"></canvas></div></div>
+<div><h3>Lowest Lamplighter HP at night (%)</h3><div class="chart"><canvas id="c_minhp"></canvas></div></div>
+<div><h3>Share of night damage dealt by the Lamplighter (%)</h3><div class="chart"><canvas id="c_herosh"></canvas></div></div>
+<div><h3>Damage taken per night</h3><div class="chart"><canvas id="c_dmgtaken"></canvas></div></div>
+<div><h3>Gold at night's end</h3><div class="chart"><canvas id="c_gold"></canvas></div></div>
+</div></section>
+
+<section><h2>Danger</h2><p class="note">What hurts, where people fall, and what nearly kills them.</p>
+<div class="grid3">
+<div><h3>Damage taken by source</h3><div class="chart tall"><canvas id="c_src"></canvas></div></div>
+<div><h3>Downs by cause</h3><div class="chart tall"><canvas id="c_downs"></canvas></div></div>
+<div><h3>Close calls (under 15% HP) by cause</h3><div class="chart tall"><canvas id="c_close"></canvas></div></div>
+</div>
+<p class="note" id="danger_where" style="margin-top:8px"></p></section>
+
+<section><h2>Damage dealt at night</h2><p class="note">Who does the killing: the Lamplighter vs each tower type (all filtered nights).</p>
+<div class="chart"><canvas id="c_dealt"></canvas></div></section>
+
+<section><h2>Builds</h2><div class="grid2">
+<div><h3>Level-up cards: pick rate when offered</h3><p class="note">Min 4 offers. Bar = how often it's taken when it shows up.</p><div id="cards" class="scroll"></div></div>
+<div><h3>Chest items taken</h3><div class="chart tall"><canvas id="c_items"></canvas></div>
+<h3 style="margin-top:12px">Starting loadouts</h3><div id="loadouts"></div></div>
+</div></section>
+
+<section><h2>Bosses &amp; Titans</h2><div class="grid2">
+<div><h3>Boss clashes</h3><div class="scroll"><table id="clashes"></table></div></div>
+<div><h3>Clash length (seconds) by night — target ~38s</h3><div class="chart"><canvas id="c_clash"></canvas></div>
+<h3 style="margin-top:10px">Titans</h3><div id="titans"></div></div>
+</div>
+<h3 style="margin-top:14px">Boss days: level, then fight</h3>
+<p class="note">Each boss day is a level, then its fight. "Lost in level" = knocked out (fell) or gave up before the fight. HP on arrival = the Lamplighter's HP reaching the fight. Trap clean = its mid-level trap cleared without a hit.</p>
+<div class="scroll"><table id="bossdays"></table></div></section>
+
+<section><h2>Music</h2><p class="note">Listening (from v0.40.7): each run counts once, using its latest night. "Muted" means muted or
+the volume at zero. Below: hearted tracks (from v0.34), how many players currently have each track hearted.</p>
+<div class="kpis" id="music_kpis"></div>
+<div class="chart"><canvas id="c_music"></canvas></div></section>
+
+<section><h2>Frame rate</h2><p class="note">Logged from v0.31. Average FPS by night and the worst 2-second stretch; PERF = Performance mode was on.</p>
+<div class="grid2"><div class="chart"><canvas id="c_fps"></canvas></div><div class="scroll"><table id="fps"></table></div></div></section>
+</main>
+<footer>Data: anonymous gameplay telemetry players opted into (Settings). Live from the game's database each time you open this page.</footer>
+<script>
+const SB = "https://ugluevzmupcacioqrmpe.supabase.co", KEY = "sb_publishable_imUXB0NUYQoNJwzLnrJdYw_7FMtFwwi";
+const $ = s => document.querySelector(s);
+const PAL = ["#ffd65a", "#8af0d0", "#ff7a6a", "#b48cff", "#6aa8ff", "#ffb04a", "#8af07a", "#f07ad8", "#d8b070", "#9fd0ff", "#ff9a50", "#c0c0c0"];
+Chart.defaults.color = "#a39aae"; Chart.defaults.borderColor = "#2c2636"; Chart.defaults.font.family = "Inter, system-ui, sans-serif";
+let EV = [], RUNS = {}, charts = {};
+
+// Everything read from the database is untrusted (anyone can post a run straight to the API, bypassing the game's
+// name filter): escape every string, and every object key, once on load so no later innerHTML can run injected markup.
+const escH = s => String(s).replace(/[&<>"'`]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#96;" }[c]));
+function clean(v) {
+  if (typeof v === "string") return escH(v);
+  if (Array.isArray(v)) return v.map(clean);
+  if (v && typeof v === "object") { const o = {}; for (const k in v) o[escH(k)] = clean(v[k]); return o; }
+  return v;
+}
+
+async function getAll(table, select, extra = "") {
+  const out = [];
+  for (let off = 0; ; off += 1000) {
+    const r = await fetch(`${SB}/rest/v1/${table}?select=${select}&order=created_at.asc&limit=1000&offset=${off}${extra}`, { headers: { apikey: KEY } });
+    if (!r.ok) throw new Error(table + " " + r.status);
+    const rows = clean(await r.json()); out.push(...rows);
+    if (rows.length < 1000) return out;
+  }
+}
+const vnum = v => (v || "0").split(".").map(Number).reduce((a, x) => a * 1000 + (x || 0), 0);
+const fmtDate = s => new Date(s).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+const sum = o => Object.values(o || {}).reduce((a, b) => a + b, 0);
+
+async function load() {
+  const [ev, runs] = await Promise.all([getAll("events", "run_id,created_at,version,difficulty,kind,day,platform,data"),
+    getAll("runs", "run_id,created_at,name,days,won,difficulty,version,hero_level,kills,in_progress,run_seconds")]);
+  for (const r of runs) {
+    if (!r.run_id || r.run_id.startsWith("_") || (r.name || "").startsWith("_")) continue;
+    RUNS[r.run_id] = r;   // latest snapshot wins (ascending order)
+  }
+  // a run that never picked a level-up card is a tooling capture (screenshots, benchmarks), not a player
+  const played = new Set(ev.filter(e => e.kind === "pick").map(e => e.run_id));
+  EV = ev.filter(e => e.run_id && !e.run_id.startsWith("_") && played.has(e.run_id));
+  // runs that only exist in events (telemetry on, leaderboard off)
+  const byRun = {};
+  for (const e of EV) (byRun[e.run_id] = byRun[e.run_id] || []).push(e);
+  window.BYRUN = byRun;
+  for (const id in byRun) {
+    const es = byRun[id], first = es[0], last = es[es.length - 1];
+    const nights = es.filter(e => e.kind === "night");
+    const end = es.find(e => e.kind === "run_end");
+    const st = es.find(e => e.kind === "run_start");   // a 20-night run walks the 30-day scale: its night N is day S20[N-1]
+    const maxDay = Math.max(0, ...nights.map(n => n.day));
+    const r = RUNS[id] || { run_id: id, name: "(anonymous)", difficulty: first.difficulty, version: first.version };
+    r.version = last.version || r.version;
+    r.len = st && st.data && st.data.nights ? +st.data.nights : ((r.days && maxDay > r.days + 1) ? 20 : 30);
+    r.difficulty = first.difficulty || r.difficulty;
+    r.reached = Math.max(0, ...nights.map(n => nightNo(r, n.day)), r.days || 0);
+    r.level = Math.max(r.hero_level || 0, ...nights.map(n => n.data.level || 0));
+    r.won = end ? !!end.data.won : !!r.won;
+    r.ended = !!end || (r.in_progress === false);
+    r.last = last.created_at > (r.created_at || "") ? last.created_at : r.created_at;
+    r.platform = first.platform;
+    r.downs = es.filter(e => e.kind === "down").length;
+    const ln = nights[nights.length - 1];
+    r.threat = ln ? ln.data.threat : null;
+    r.rises = Math.max(0, ...nights.map(n => +n.data.rises_total || 0));   // rose again after a loss (from v0.41.1)
+    RUNS[id] = r;
+  }
+  for (const id of Object.keys(RUNS)) if (!byRun[id]) delete RUNS[id];
+  const vers = [...new Set(Object.values(RUNS).map(r => r.version))].sort((a, b) => vnum(a) - vnum(b));
+  $("#fver").innerHTML = '<option value="">All</option>' + vers.map(v => `<option>${v}</option>`).join("");
+  const names = [...new Set(Object.values(RUNS).map(r => r.name))].sort();
+  $("#fname").innerHTML = '<option value="">Everyone</option>' + names.map(n => `<option>${n}</option>`).join("");
+  $("#status").textContent = `${EV.length} events · updated ${fmtDate(new Date())}`;
+  for (const id of ["#fver", "#fdiff", "#fname", "#flive", "#fanon", "#fallc"]) $(id).onchange = render;
+  render();
+}
+
+const SEL = new Set();   // runs clicked in the table: when set, the whole report focuses on them
+function filtered() {
+  const v = $("#fver").value, d = $("#fdiff").value, n = $("#fname").value, live = $("#flive").checked, anon = $("#fanon").checked;
+  return Object.values(RUNS).filter(r => (!v || vnum(r.version) >= vnum(v)) && (!d || r.difficulty === d) && (!n || r.name === n) && (live || r.ended)
+      && (anon || r.name !== "(anonymous)"))
+    .sort((a, b) => (b.last || "").localeCompare(a.last || ""));
+}
+const S20 = [1, 2, 3, 5, 6, 8, 10, 11, 13, 15, 16, 18, 20, 21, 23, 25, 26, 28, 29, 30];   // (Data.SCHEDULE_20)
+function nightNo(r, day) { return r && r.len === 20 ? S20.filter(x => x <= day).length : day; }
+function nightsOf(id) {
+  const m = {};
+  for (const e of BYRUN[id] || []) if (e.kind === "night") m[e.day] = e.data;   // latest post per night
+  return Object.keys(m).map(Number).sort((a, b) => a - b).map(k => ({ n: nightNo(RUNS[id], k), day: k, ...m[k] }));
+}
+function mk(id, cfg) { if (charts[id]) charts[id].destroy(); charts[id] = new Chart($(id), cfg); }
+function lineCfg(sets, ylab, extra = {}) {
+  return { type: "line", data: { datasets: sets }, options: { maintainAspectRatio: false, parsing: false, animation: false,
+    interaction: { mode: "nearest", intersect: false }, plugins: { legend: { display: sets.length <= 6, labels: { boxWidth: 10 } } },
+    scales: { x: { type: "linear", title: { display: true, text: "night" }, ticks: { stepSize: 1 } }, y: { title: { display: !!ylab, text: ylab }, ...extra } } } };
+}
+function barCfg(labels, data, color = "#ffb04a", horiz = true) {
+  return { type: "bar", data: { labels, datasets: [{ data, backgroundColor: color }] }, options: { maintainAspectRatio: false, animation: false,
+    indexAxis: horiz ? "y" : "x", plugins: { legend: { display: false } }, scales: { x: { grid: { display: !horiz } } } } };
+}
+const runLabel = r => `${r.name} · ${r.run_id.slice(0, 4)} (v${r.version})`;
+
+function render() {
+  const all = filtered();
+  for (const id of [...SEL]) if (!all.some(r => r.run_id === id)) SEL.delete(id);   // filtered out: drop from the selection
+  const rs = SEL.size ? all.filter(r => SEL.has(r.run_id)) : all, ids = new Set(rs.map(r => r.run_id));
+  const rsL = SEL.size || $("#fallc").checked ? rs : rs.slice(0, 8);   // runs drawn as lines on the charts
+  $("#selbar").style.display = SEL.size ? "block" : "none";
+  $("#selbar").innerHTML = SEL.size ? `Showing ${rs.length === 1 ? "one run" : rs.length + " runs"}: ${rs.map(runLabel).join(", ")}<button id="selclear">Show all runs</button>` : "";
+  if (SEL.size) $("#selclear").onclick = () => { SEL.clear(); $("#detail").style.display = "none"; render(); };
+  const evs = EV.filter(e => ids.has(e.run_id));
+  const nights = rs.flatMap(r => nightsOf(r.run_id).map(n => ({ ...n, run: r })));
+  // KPIs
+  const players = new Set(rs.map(r => r.name)).size, won = rs.filter(r => r.won).length;
+  const k = [[players, "players"], [rs.length, "runs"], [nights.length, "nights logged"], [won, "runs won"],
+    [evs.filter(e => e.kind === "down").length, "downs"], [rs.length ? Math.max(...rs.map(r => r.reached)) : 0, "furthest night"],
+    [evs.filter(e => e.kind === "clash").length, "boss clashes"], [rs[0] ? "v" + rs.map(r => r.version).sort((a, b) => vnum(b) - vnum(a))[0] : "-", "newest version"],
+    // play time from each run's latest leaderboard snapshot (runs without a leaderboard name don't post one)
+    [(rs.reduce((a, r) => a + (+r.run_seconds || 0), 0) / 3600).toFixed(1), "hours played (named runs)"]];
+  $("#kpis").innerHTML = k.map(([v, l]) => `<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("");
+  // runs table
+  $("#runs").innerHTML = "<tr><th>Player</th><th>Version</th><th>Mode</th><th>Night</th><th>Level</th><th>Result</th><th>Downs</th><th>Threat</th><th>Kills</th><th>Last played</th></tr>" +
+    all.map(r => `<tr class="run${SEL.has(r.run_id) ? " sel" : ""}" data-id="${r.run_id}"><td>${r.name}</td><td>v${r.version}</td><td>${r.difficulty}</td><td>${r.reached}</td><td>${r.level}</td>
+      <td>${r.won ? '<span class="tag won">WON</span>' : r.ended ? '<span class="tag lost">fell n' + r.reached + '</span>' : '<span class="tag live">in progress</span>'}${r.rises ? ' <span class="tag rose">ROSE ×' + r.rises + '</span>' : ''}</td>
+      <td>${r.downs}</td><td>${r.threat != null ? r.threat.toFixed(2) + "×" : "-"}</td><td>${r.kills ?? "-"}</td><td>${fmtDate(r.last)}</td></tr>`).join("");
+  for (const tr of document.querySelectorAll("tr.run")) tr.onclick = (ev) => {
+    const id = tr.dataset.id;
+    if (ev.ctrlKey || ev.metaKey || ev.shiftKey) { if (SEL.has(id)) SEL.delete(id); else SEL.add(id); }
+    else if (SEL.size === 1 && SEL.has(id)) SEL.clear();
+    else { SEL.clear(); SEL.add(id); }
+    render();
+    if (SEL.size === 1) detail([...SEL][0]); else $("#detail").style.display = "none";
+  };
+  // night-by-night lines, one per run
+  const per = (f) => rsL.map((r, i) => ({ label: runLabel(r), data: nightsOf(r.run_id).map(n => ({ x: n.n, y: f(n) })).filter(p => p.y != null && !isNaN(p.y)),
+    borderColor: PAL[i % PAL.length], backgroundColor: PAL[i % PAL.length], pointRadius: 2, borderWidth: 2, tension: 0.2 })).filter(s => s.data.length);
+  mk("#c_level", lineCfg(per(n => n.level), "level"));
+  mk("#c_threat", lineCfg(per(n => n.threat), "× monster HP"));
+  mk("#c_minhp", lineCfg(per(n => n.night_min_hp != null ? n.night_min_hp * 100 : null), "%", { min: 0, max: 100 }));
+  mk("#c_herosh", lineCfg(per(n => { const t = sum(n.dmg_dealt); return t ? 100 * (n.dmg_dealt.hero || 0) / t : null; }), "%", { min: 0, max: 100 }));
+  mk("#c_dmgtaken", lineCfg(per(n => n.dmg_taken ? sum(n.dmg_taken) : null), "damage"));
+  mk("#c_gold", lineCfg(per(n => n.gold), "gold"));
+  // danger
+  const src = {};
+  for (const n of nights) for (const [kk, v] of Object.entries(n.dmg_taken || {})) src[kk] = (src[kk] || 0) + v;
+  const top = (o, m = 12) => Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, m);
+  let t = top(src); mk("#c_src", barCfg(t.map(x => x[0]), t.map(x => Math.round(x[1])), "#ff7a6a"));
+  const cnt = (arr, key) => arr.reduce((o, e) => (o[e.data[key] || "?"] = (o[e.data[key] || "?"] || 0) + 1, o), {});
+  const downs = evs.filter(e => e.kind === "down"), close = evs.filter(e => e.kind === "close_call" && e.data.what === "hp");
+  t = top(cnt(downs, "by")); mk("#c_downs", barCfg(t.map(x => x[0]), t.map(x => x[1]), "#ff7a6a"));
+  t = top(cnt(close, "by")); mk("#c_close", barCfg(t.map(x => x[0]), t.map(x => x[1]), "#ffb04a"));
+  const wd = cnt(downs, "area"), wc = cnt(close, "area");
+  $("#danger_where").textContent = `Downs by where: ${Object.entries(wd).map(([a, b]) => a + " " + b).join(", ") || "none"} · Close calls by where: ${Object.entries(wc).map(([a, b]) => a + " " + b).join(", ") || "none"} · Light close calls: ${evs.filter(e => e.kind === "close_call" && e.data.what === "light").length}`;
+  const dealt = {};
+  for (const n of nights) for (const [kk, v] of Object.entries(n.dmg_dealt || {})) dealt[kk] = (dealt[kk] || 0) + v;
+  const dt = sum(dealt) || 1; t = top(dealt, 14);
+  mk("#c_dealt", barCfg(t.map(x => x[0] + " " + Math.round(100 * x[1] / dt) + "%"), t.map(x => Math.round(x[1])), "#8af0d0"));
+  // cards
+  const off = {}, got = {};
+  for (const e of evs.filter(e => e.kind === "pick")) {
+    got[e.data.picked] = (got[e.data.picked] || 0) + 1;
+    for (const o of e.data.offered || []) off[o] = (off[o] || 0) + 1;
+  }
+  const rows = Object.keys(off).filter(c => off[c] >= 4).map(c => [c, (got[c] || 0) / off[c], off[c], got[c] || 0]).sort((a, b) => b[1] - a[1]);
+  $("#cards").innerHTML = "<table><tr><th>Card</th><th>Pick rate</th><th>Offered</th><th>Taken</th></tr>" + rows.map(([c, r, o, g]) =>
+    `<tr><td>${c}</td><td><span class="bar" style="width:${Math.round(r * 90)}px"></span>${Math.round(r * 100)}%</td><td>${o}</td><td>${g}</td></tr>`).join("") + "</table>";
+  t = top(cnt(evs.filter(e => e.kind === "item"), "picked"), 16); mk("#c_items", barCfg(t.map(x => x[0]), t.map(x => x[1]), "#b48cff"));
+  const lo = {};
+  for (const e of evs.filter(e => e.kind === "run_start")) for (const [kk, v] of Object.entries(e.data.loadout || {})) if (v && v !== "none") lo[kk + ": " + v] = (lo[kk + ": " + v] || 0) + 1;
+  $("#loadouts").innerHTML = top(lo, 20).map(([kk, v]) => `<span class="pill">${kk} <i>×${v}</i></span>`).join("") || '<span class="note">none picked yet</span>';
+  // boss days: a level's own fail ("fight": "level"), or a fight that came through a level ("pay" attached)
+  const bd = {};
+  for (const e of evs.filter(e => e.kind === "clash" && e.data && (e.data.fight === "level" || e.data.pay))) {
+    const d = e.data, b = d.boss, r = (bd[b] = bd[b] || { n: 0, fell: 0, gave: 0, won: 0, lost: 0, bell: [], hp: [], clean: 0, trapped: 0, where: {} });
+    const p = d.pay || {};
+    r.n += 1;
+    if (d.fight === "level") {
+      if (p.why === "gave_up") r.gave += 1; else r.fell += 1;
+      if (p.where) r.where[p.where] = (r.where[p.where] || 0) + 1;
+    } else {
+      if (d.won) r.won += 1; else r.lost += 1;
+      if (p.hp != null) r.hp.push(+p.hp);
+    }
+    if (p.bell != null) r.bell.push(+p.bell);
+    if (p.trap === "clean" || p.trap === "done") { r.trapped += 1; if (p.trap === "clean") r.clean += 1; }
+  }
+  const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+  const pc = (a, b) => b ? Math.round(100 * a / b) + "%" : "-";
+  $("#bossdays").innerHTML = "<tr><th>Boss</th><th>Days</th><th>Lost in level</th><th>Fight won</th><th>Fight lost</th><th>Avg level time</th><th>HP on arrival</th><th>Trap clean</th><th>Where levels were lost</th></tr>" +
+    (Object.keys(bd).length ? Object.entries(bd).map(([b, r]) => `<tr><td>${b}</td><td>${r.n}</td><td>${r.fell + r.gave}${r.gave ? " (" + r.gave + " gave up)" : ""}</td><td>${r.won}</td><td>${r.lost}</td>
+      <td>${avg(r.bell) != null ? avg(r.bell).toFixed(0) + "s" : "-"}</td><td>${avg(r.hp) != null ? Math.round(100 * avg(r.hp)) + "%" : "-"}</td><td>${pc(r.clean, r.trapped)}</td>
+      <td>${Object.entries(r.where).map(([w, k]) => w + " ×" + k).join(", ") || "-"}</td></tr>`).join("") : '<tr><td colspan="9" class="note">No boss days played yet.</td></tr>');
+  // clashes
+  const cl = evs.filter(e => e.kind === "clash"), bb = {};
+  for (const c of cl) (bb[c.data.boss] = bb[c.data.boss] || []).push(c.data);
+  $("#clashes").innerHTML = "<tr><th>Boss</th><th>Fights</th><th>Won</th><th>Avg seconds</th><th>Avg HP left</th></tr>" + Object.entries(bb).map(([b, cs]) =>
+    `<tr><td>${b}</td><td>${cs.length}</td><td>${Math.round(100 * cs.filter(c => c.won).length / cs.length)}%</td><td>${(cs.reduce((a, c) => a + (c.seconds || 0), 0) / cs.length).toFixed(1)}</td><td>${Math.round(100 * cs.reduce((a, c) => a + (c.hp_left || 0), 0) / cs.length)}%</td></tr>`).join("");
+  mk("#c_clash", { type: "scatter", data: { datasets: [{ label: "won", data: cl.filter(c => c.data.won).map(c => ({ x: nightNo(RUNS[c.run_id], c.day), y: c.data.seconds })), backgroundColor: "#8af0d0" },
+    { label: "lost", data: cl.filter(c => !c.data.won).map(c => ({ x: nightNo(RUNS[c.run_id], c.day), y: c.data.seconds })), backgroundColor: "#ff7a6a" }] },
+    options: { maintainAspectRatio: false, animation: false, scales: { x: { title: { display: true, text: "night" } }, y: { title: { display: true, text: "seconds" }, min: 0 } } } });
+  const ti = evs.filter(e => e.kind === "titan");
+  $("#titans").innerHTML = ti.length ? ti.map(e => `<span class="pill">${e.data.titan} <i>${e.data.slain ? "slain" : "escaped"} night ${nightNo(RUNS[e.run_id], e.day)}, lv ${e.data.level}</i></span>`).join("") : '<span class="note">none yet</span>';
+  // listening: per run, the latest night that reports music, plus totals across its nights
+  const lis = {};
+  for (const e of evs.filter(e => e.kind === "night" && e.data && e.data.music)) {
+    const m = e.data.music, L = lis[e.run_id] = lis[e.run_id] || { on: true, toggles: 0, share: 0, n: 0, day: -1 };
+    if (e.day >= L.day) { L.day = e.day; L.on = !!m.on; }
+    L.toggles += +m.toggles || 0; L.share += +m.muted_share || 0; L.n += 1;
+  }
+  const lr = Object.values(lis);
+  const pct = (a, b) => b ? Math.round(100 * a / b) + "%" : "-";
+  $("#music_kpis").innerHTML = lr.length ? [
+    [pct(lr.filter(L => L.on).length, lr.length), "of players have music ON now"],
+    [pct(lr.filter(L => L.toggles > 0).length, lr.length), "switched it on/off at least once"],
+    [Math.round(100 * lr.reduce((a, L) => a + L.share / L.n, 0) / lr.length) + "%", "average share of play time muted"],
+    [lr.length, "runs reporting"],
+  ].map(([b, t]) => `<div class="kpi"><b>${b}</b><span>${t}</span></div>`).join("")
+    : '<span class="note">No listening data yet (starts with v0.40.7).</span>';
+  // music hearts: the latest like/unlike per run and track counts
+  const lastLike = {};
+  for (const e of evs.filter(e => e.kind === "music_like")) lastLike[e.run_id + "|" + e.data.track] = e.data.liked;
+  const hearts = {};
+  for (const [k, v] of Object.entries(lastLike)) { const tr = k.split("|")[1]; hearts[tr] = (hearts[tr] || 0) + (v ? 1 : 0); }
+  const hm = Object.entries(hearts).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]);
+  mk("#c_music", barCfg(hm.length ? hm.map(x => x[0]) : ["no hearts yet"], hm.length ? hm.map(x => x[1]) : [0], "#ff5a7a"));
+  // fps
+  const fr = nights.filter(n => n.perf_night);
+  const fsets = rsL.map((r, i) => ({ label: runLabel(r), data: nightsOf(r.run_id).filter(n => n.perf_night).map(n => ({ x: n.n, y: n.perf_night.fps })),
+    borderColor: PAL[i % PAL.length], backgroundColor: PAL[i % PAL.length], pointRadius: 3, borderWidth: 2 })).filter(s => s.data.length);
+  mk("#c_fps", lineCfg(fsets, "fps", { min: 0 }));
+  $("#fps").innerHTML = fr.length ? "<tr><th>Run</th><th>Night</th><th>Day fps</th><th>Night fps</th><th>Worst 2s</th><th>&lt;30fps</th><th>Lights</th><th>Screen</th><th></th></tr>" +
+    fr.slice(-40).reverse().map(n => `<tr><td>${n.run.name}</td><td>${n.n}</td><td>${(n.perf_day || {}).fps ?? "-"}</td><td>${n.perf_night.fps}</td><td>${n.perf_night.fps_low}</td>
+      <td>${Math.round(100 * (n.perf_night.slow_frames || 0))}%</td><td>${n.perf_night.lights ?? "-"}</td><td>${n.perf_night.screen || ""}</td><td>${n.perf_night.perf_mode ? '<span class="tag live">PERF</span>' : ""}</td></tr>`).join("")
+    : '<tr><td class="note">No frame-rate data yet (needs players on v0.31+).</td></tr>';
+}
+
+function detail(id) {
+  const r = RUNS[id], ns = nightsOf(id), es = BYRUN[id];
+  $("#detail").style.display = "block";
+  $("#dtitle").textContent = `${r.name}'s run · v${r.version} · ${r.difficulty}`;
+  $("#dsub").textContent = `${r.won ? "Won" : r.ended ? "Fell on night " + r.reached : "In progress, night " + r.reached} · level ${r.level} · ${r.downs} downs${r.rises ? " · rose again " + r.rises + "×" : ""} · ${r.platform || ""} · last played ${fmtDate(r.last)}`;
+  const L = (f, label, c, axis = "y") => ({ label, data: ns.map(n => ({ x: n.n, y: f(n) })).filter(p => p.y != null), borderColor: c, backgroundColor: c, yAxisID: axis, pointRadius: 2, borderWidth: 2 });
+  const c1 = lineCfg([L(n => n.level, "hero level", "#ffd65a"), L(n => n.threat, "threat ×", "#ff7a6a", "y2"), L(n => n.clash_mult, "boss ×", "#b48cff", "y2")], "level");
+  c1.options.scales.y2 = { position: "right", grid: { display: false }, title: { display: true, text: "×" } };
+  mk("#dc1", c1);
+  mk("#dc2", lineCfg([L(n => n.night_min_hp != null ? n.night_min_hp * 100 : null, "night low HP %", "#ff7a6a"), L(n => n.day_min_hp != null ? n.day_min_hp * 100 : null, "day low HP %", "#ffb04a"),
+    L(n => n.ember_max ? 100 * n.ember / n.ember_max : null, "Hollowlight %", "#8af0d0")], "%", { min: 0, max: 100 }));
+  $("#dnights").innerHTML = "<tr><th>Night</th><th>Lv</th><th>Threat</th><th>Boss×</th><th>Kills</th><th>Leaks</th><th>Light</th><th>Low HP n/d</th><th>Dmg taken</th><th>Hero dmg%</th><th>Gold</th><th>Towers</th><th>Abilities</th><th>Event</th></tr>" +
+    ns.map(n => { const t = sum(n.dmg_dealt); return `<tr><td>${n.n}${n.rose ? ' <span class="tag rose">↑ rose' + (n.rose > 1 ? " ×" + n.rose : "") + '</span>' : ""}</td><td>${n.level}</td><td>${(n.threat || 1).toFixed(2)}</td><td>${(n.clash_mult || 1).toFixed(2)}</td><td>${n.kills}</td><td>${n.leaks}</td>
+      <td>${n.ember}/${n.ember_max}</td><td>${Math.round(100 * (n.night_min_hp ?? 1))}% / ${Math.round(100 * (n.day_min_hp ?? 1))}%</td><td>${Math.round(sum(n.dmg_taken))}</td>
+      <td>${t ? Math.round(100 * (n.dmg_dealt.hero || 0) / t) : "-"}%</td><td>${n.gold}</td><td>${Object.entries(n.towers || {}).map(([a, b]) => a + "×" + b).join(" ")}</td>
+      <td>${(n.slots || []).join(", ")}</td><td>${n.event || ""}</td></tr>`; }).join("");
+  $("#dpicks").innerHTML = es.filter(e => e.kind === "pick").map(e => `<span class="pill">${e.data.picked} <i>lv${e.data.level}</i></span>`).join("") || '<span class="note">none</span>';
+  $("#ditems").innerHTML = es.filter(e => e.kind === "item").map(e => `<span class="pill">${e.data.picked} <i>${e.data.rarity} n${nightNo(r, e.day)}</i></span>`).join("") || '<span class="note">none</span>';
+  $("#devents").innerHTML = es.filter(e => ["clash", "titan", "down", "close_call"].includes(e.kind)).map(e => {
+    const d = e.data;
+    if (e.kind === "clash") return `<span class="pill">⚔ ${d.boss} <i>${d.won ? "won" : "lost"} ${d.seconds}s n${nightNo(r, e.day)}</i></span>`;
+    if (e.kind === "titan") return `<span class="pill">◆ ${d.titan} <i>${d.slain ? "slain" : "met"} n${nightNo(r, e.day)}</i></span>`;
+    if (e.kind === "down") return `<span class="pill" style="border-color:#ff7a6a">✖ down <i>${d.by} · ${d.area} · n${nightNo(r, e.day)}</i></span>`;
+    return `<span class="pill">! close call <i>${d.what} ${Math.round(100 * d.frac)}% · ${d.by || ""} · ${d.area || ""} n${nightNo(r, e.day)}</i></span>`; }).join("") || '<span class="note">none</span>';
+  $("#detail").scrollIntoView({ behavior: "smooth" });
+}
+
+load().catch(e => { $("#status").textContent = "couldn't load data: " + e.message; });
+</script></body></html>
