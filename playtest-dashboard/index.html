@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en"><head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PHT8BH2B72"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PHT8BH2B72');
+</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hollowlight playtests</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://ugluevzmupcacioqrmpe.supabase.co" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root { --bg:#100d16; --panel:#1a1622; --card:#211c2b; --card2:#272132; --line:#352f42; --line2:#2a2535; --text:#ece4d6;
+  --dim:#a39aae; --faint:#6f6880; --gold:#ffd65a; --ember:#ffb04a; --teal:#8af0d0; --red:#ff7a6a; --violet:#b48cff; --blue:#6aa8ff; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:110px; }
+body { margin:0; color:var(--text); font:14px/1.5 Inter, system-ui, sans-serif; font-variant-numeric:tabular-nums;
+  background: radial-gradient(ellipse 1100px 520px at 50% -180px, #ffb04a26, transparent 70%), var(--bg); min-height:100vh; }
+a { color:var(--teal); }
+#loadbar { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg, var(--ember), var(--gold)); z-index:50;
+  box-shadow:0 0 10px var(--ember); transition:width .2s, opacity .4s; }
+header { max-width:1320px; margin:0 auto; padding:24px 20px 6px; display:flex; flex-wrap:wrap; gap:6px 20px; align-items:flex-end; }
+h1 { font:400 28px/1.1 Silkscreen, monospace; color:var(--gold); margin:0; text-shadow:0 0 16px #ffb04a55, 2px 2px 0 #5a2d0c; letter-spacing:.5px; }
+.sub { color:var(--dim); font-size:13px; }
+.bar-top { position:sticky; top:0; z-index:20; background:#100d16e8; backdrop-filter:blur(8px); border-bottom:1px solid var(--line2); }
+.bar-in { max-width:1320px; margin:0 auto; padding:8px 20px; display:flex; flex-wrap:wrap; gap:8px 16px; align-items:center; }
+.filters { display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; font-size:12.5px; color:var(--dim); }
+.filters label { display:flex; align-items:center; gap:5px; }
+select, input[type=checkbox] { accent-color:var(--gold); }
+select, input[type=search] { background:#0c0a11; color:var(--text); border:1px solid var(--line); padding:4px 7px; font:inherit; border-radius:4px; }
+input[type=search] { width:180px; }
+nav.jump { display:flex; flex-wrap:wrap; gap:4px; margin-left:auto; }
+nav.jump a { color:var(--dim); text-decoration:none; font-size:12px; padding:3px 8px; border:1px solid var(--line2); border-radius:999px; }
+nav.jump a:hover { color:var(--gold); border-color:var(--gold); }
+main { max-width:1320px; margin:0 auto; padding:10px 20px 60px; }
+.kpis { display:grid; grid-template-columns:repeat(auto-fit, minmax(124px, 1fr)); gap:10px; margin:6px 0 18px; }
+.kpi { background:linear-gradient(180deg, var(--card2), var(--card)); border:1px solid var(--line); border-top:3px solid var(--k, var(--gold));
+  padding:10px 12px 9px; border-radius:6px; box-shadow:0 3px 0 #0007; }
+.kpi b { display:block; font:700 24px/1.15 Inter, system-ui, sans-serif; color:var(--k, var(--gold)); }
+.kpi span { color:var(--dim); font-size:12px; }
+.kpi small { display:block; color:var(--faint); font-size:11px; margin-top:1px; }
+section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px 18px 18px; margin:0 0 16px; box-shadow:0 4px 0 #0007; }
+.shead { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; margin-bottom:8px; }
+h2 { font:400 16px Silkscreen, monospace; color:var(--ember); margin:0; }
+.note { color:var(--dim); font-size:12.5px; margin:0 0 10px; }
+.shead .note { margin:0; }
+.grid2 { display:grid; grid-template-columns:repeat(auto-fit, minmax(420px, 1fr)); gap:16px; }
+.grid3 { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; }
+.panel { background:var(--card); border:1px solid var(--line2); border-radius:6px; padding:10px 12px 12px; min-width:0; }
+.chart { position:relative; height:250px; }
+.chart.tall { height:320px; }
+h3 { font:600 13.5px Inter, system-ui, sans-serif; color:var(--gold); margin:0 0 6px; }
+h3 .note { font-weight:400; }
+table { width:100%; border-collapse:collapse; font-size:13.5px; }
+thead th { position:sticky; top:0; background:var(--card); z-index:1; }
+th { text-align:left; color:var(--dim); font-weight:600; border-bottom:1px solid var(--line); padding:6px 7px; white-space:nowrap; }
+td { border-bottom:1px solid var(--line2); padding:5px 7px; white-space:nowrap; }
+tbody tr:hover td { background:#2a2435; }
+tr.run { cursor:pointer; }
+tr.run.sel td { background:#3a2f1c; }
+tr.run.sel td:first-child { box-shadow: inset 3px 0 0 var(--gold); }
+.box { max-height:440px; overflow:auto; border:1px solid var(--line2); border-radius:6px; background:var(--card); }
+.box.short { max-height:320px; }
+#goals td:first-child, #bench td:first-child, #cards td:first-child { white-space:normal; word-break:break-word; }
+.scroll { overflow-x:auto; }
+.tools { display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; margin:0 0 8px; font-size:12.5px; color:var(--dim); }
+.more { display:block; width:100%; padding:7px; background:var(--card2); color:var(--gold); border:0; border-top:1px solid var(--line2); cursor:pointer; font:inherit; }
+#selbar { display:none; margin:0 0 14px; padding:8px 12px; background:#2a2435; border:1px solid var(--gold); border-radius:6px; color:var(--gold); }
+#selbar button { margin-left:10px; background:#1a1622; color:var(--gold); border:1px solid var(--gold); padding:2px 10px; cursor:pointer; font:inherit; border-radius:4px; }
+.tag { display:inline-block; padding:0 6px; font-size:11.5px; font-weight:600; border:1px solid; border-radius:3px; }
+.tag.rose { color:#5cffd8; border-color:#5cffd8; }
+.won { color:var(--teal); } .lost { color:var(--red); } .live { color:var(--gold); }
+.hbar { height:8px; background:var(--ember); display:inline-block; vertical-align:middle; margin-right:6px; border-radius:2px; }
+#detail { display:none; border-color:var(--gold); }
+.pill { display:inline-block; background:var(--card2); border:1px solid var(--line); padding:1px 7px; margin:2px; font-size:12px; border-radius:999px; }
+.pill i { color:var(--dim); font-style:normal; }
+.empty { color:var(--faint); font-size:12.5px; padding:8px 2px; }
+.skel { color:var(--faint); }
+footer { text-align:center; color:var(--dim); font-size:12px; padding:0 20px 30px; }
+footer button { background:none; border:1px solid var(--line); color:var(--dim); padding:3px 10px; border-radius:4px; cursor:pointer; font:inherit; margin-left:6px; }
+@media (max-width:700px) { .grid2, .grid3 { grid-template-columns:1fr; } header, .bar-in { padding-left:16px; padding-right:16px; }
+  main { padding:8px 16px 40px; } nav.jump { margin-left:0; } .bar-top { position:static; } input[type=search] { width:140px; } }
+</style></head><body>
+<div id="loadbar"></div>
+<header>
+  <div><h1>PLAYTEST DASHBOARD</h1><div class="sub">Hollowlight · every real run the game has logged · <span id="status">loading…</span></div></div>
+</header>
+<div class="bar-top"><div class="bar-in">
+  <div class="filters">
+    <label>Version ≥ <select id="fver"><option value="">All</option></select></label>
+    <label>Difficulty <select id="fdiff"><option value="">All</option><option value="normal">Normal</option><option value="hard">Hard</option><option value="nightmare">Nightmare</option></select></label>
+    <label>Pace <select id="fpace"><option value="">All</option><option value="learner">Learner</option><option value="veteran">Veteran</option></select></label>
+    <label>Player <select id="fname"><option value="">Everyone</option></select></label>
+    <label><input type="checkbox" id="flive" checked> runs in progress</label>
+    <label><input type="checkbox" id="fanon"> anonymous runs</label>
+    <label title="Night-by-night charts draw the newest 8 runs unless this is on"><input type="checkbox" id="fallc"> all runs on charts</label>
+  </div>
+  <nav class="jump"><a href="#s_health">Health</a><a href="#s_runs">Runs</a><a href="#s_nights">Nights</a><a href="#s_danger">Danger</a><a href="#s_econ">Economy</a><a href="#s_play">Play style</a><a href="#s_builds">Builds</a><a href="#s_bosses">Bosses</a><a href="#s_tech">Music &amp; FPS</a></nav>
+</div></div>
+<main>
+<div id="selbar"></div>
+<div class="kpis" id="kpis"><div class="kpi"><b class="skel">…</b><span>loading runs</span></div></div>
+
+<section id="s_health"><div class="shead"><h2>Health</h2><p class="note">How far runs get, where they stop, who comes back, and how each version compares.</p></div>
+<div class="panel" style="margin-bottom:16px"><h3>Retention over time</h3>
+<p class="note">Bars: runs started each day, stacked by how far they got (in-progress runs count their night so far). Purple line: median play time of that day's runs. Teal line: share of that day's new players who came back on a later day (the newest days haven't had time yet). Dotted lines: days a patch went out, labelled with the last part of the version. Lines skip days with fewer than 3 runs / new players.</p>
+<div class="tools"><label>Range <select id="rtdays"><option value="30" selected>30 days</option><option value="60">60 days</option><option value="9999">All</option></select></label>
+<label><input type="checkbox" id="rtpatch" checked> patch lines</label></div>
+<div class="chart" style="height:340px"><canvas id="c_ret"></canvas></div>
+<details style="margin-top:8px"><summary class="note" style="cursor:pointer;display:list-item">Patches on this chart</summary><div id="rt_patches" class="note" style="margin-top:6px;max-height:200px;overflow:auto"></div></details>
+</div>
+<div class="grid2">
+<div class="panel"><h3>Survival: share of finished 15-night runs reaching each night</h3><div class="chart"><canvas id="c_surv"></canvas></div></div>
+<div class="panel"><h3>Where finished 15-night runs end</h3><div class="chart"><canvas id="c_end"></canvas></div><p class="note" id="end_note" style="margin:6px 0 0"></p></div>
+<div class="panel"><h3>Runs started per day (last 30 days)</h3><div class="chart"><canvas id="c_daily"></canvas></div></div>
+<div class="panel"><h3>By version <span class="note">(newest 12)</span></h3><div class="box short"><table id="versions"></table></div></div>
+</div></section>
+
+<section id="s_runs"><div class="shead"><h2>Runs</h2><p class="note">Newest first. Click a run to focus the whole report on it (Ctrl / Shift-click adds runs, click again to clear). Its night-by-night breakdown opens below.</p></div>
+<div class="tools"><input type="search" id="rsearch" placeholder="Find a player…"><span id="rcount"></span></div>
+<div class="box"><table id="runs"></table><button class="more" id="rmore" style="display:none"></button></div></section>
+
+<section id="detail"><div class="shead"><h2 id="dtitle"></h2><p class="note" id="dsub"></p></div>
+<div class="grid2"><div class="panel"><h3>Hero level, threat and boss toughness</h3><div class="chart"><canvas id="dc1"></canvas></div></div>
+<div class="panel"><h3>Lowest HP each night / day, and Hollowlight left</h3><div class="chart"><canvas id="dc2"></canvas></div></div></div>
+<div class="box short" style="margin-top:12px"><table id="dnights"></table></div>
+<div class="grid3" style="margin-top:12px"><div class="panel"><h3>Level-up picks</h3><div id="dpicks"></div></div><div class="panel"><h3>Items</h3><div id="ditems"></div></div><div class="panel"><h3>Boss clashes, titans, deaths</h3><div id="devents"></div></div></div>
+</section>
+
+<section id="s_nights"><div class="shead"><h2>Night by night</h2><p class="note">One line per run (filtered). How strong players get, how hard the Hollow pushes back, and how close nights get.</p></div>
+<div class="grid2">
+<div class="panel"><h3>Hero level</h3><div class="chart"><canvas id="c_level"></canvas></div></div>
+<div class="panel"><h3>Night threat (adaptive difficulty)</h3><div class="chart"><canvas id="c_threat"></canvas></div></div>
+<div class="panel"><h3>Lowest Lamplighter HP at night (%)</h3><div class="chart"><canvas id="c_minhp"></canvas></div></div>
+<div class="panel"><h3>Share of night damage dealt by the Lamplighter (%)</h3><div class="chart"><canvas id="c_herosh"></canvas></div></div>
+<div class="panel"><h3>Damage taken per night</h3><div class="chart"><canvas id="c_dmgtaken"></canvas></div></div>
+<div class="panel"><h3>Leaks per night (monsters that reached the Hollowlight)</h3><div class="chart"><canvas id="c_leaks"></canvas></div></div>
+<div class="panel"><h3>Gold at night's end</h3><div class="chart"><canvas id="c_gold"></canvas></div></div>
+<div class="panel"><h3>Hollowlight left at dawn (%)</h3><div class="chart"><canvas id="c_light"></canvas></div></div>
+</div></section>
+
+<section id="s_danger"><div class="shead"><h2>Danger</h2><p class="note">What hurts, where people fall, and what nearly kills them.</p></div>
+<div class="grid3">
+<div class="panel"><h3>Damage taken by source</h3><div class="chart tall"><canvas id="c_src"></canvas></div></div>
+<div class="panel"><h3>Downs by cause</h3><div class="chart tall"><canvas id="c_downs"></canvas></div></div>
+<div class="panel"><h3>Close calls (under 15% HP) by cause</h3><div class="chart tall"><canvas id="c_close"></canvas></div></div>
+</div>
+<p class="note" id="danger_where" style="margin:10px 0 0"></p>
+<div class="panel" style="margin-top:12px"><h3>Damage dealt at night: the Lamplighter vs each tower</h3><p class="note" id="dealt_note"></p><div class="chart"><canvas id="c_dealt"></canvas></div></div>
+</section>
+
+<section id="s_econ"><div class="shead"><h2>Economy</h2><p class="note">Where gold comes from and goes, what a day's gathering brings in, and what gets crafted at the Workbench.</p></div>
+<div class="grid2">
+<div class="panel"><h3>Gold earned by source <span class="note">(avg per night)</span></h3><div class="chart"><canvas id="c_goldin"></canvas></div></div>
+<div class="panel"><h3>Gold spent by sink <span class="note">(avg per night)</span></h3><div class="chart"><canvas id="c_goldout"></canvas></div></div>
+<div class="panel"><h3>Materials gathered per day <span class="note">(avg)</span></h3><div class="chart"><canvas id="c_mats"></canvas></div></div>
+<div class="panel"><h3>Workbench: share of runs that crafted each recipe</h3><div class="box short" id="bench"></div></div>
+</div></section>
+
+<section id="s_play"><div class="shead"><h2>Play style</h2><p class="note">What players actually press, how often dawn goals get done, and which blueprints get found.</p></div>
+<div class="grid3">
+<div class="panel"><h3>Actions <span class="note">(avg per day / night, and share of nights used)</span></h3><div class="scroll" id="use"></div></div>
+<div class="panel"><h3>Dawn goals: done rate</h3><div class="box short" id="goals"></div></div>
+<div class="panel"><h3>Blueprints unlocked</h3><div class="chart tall"><canvas id="c_bp"></canvas></div></div>
+</div></section>
+
+<section id="s_builds"><div class="shead"><h2>Builds</h2></div><div class="grid2">
+<div class="panel"><h3>Level-up cards: pick rate when offered</h3><p class="note">Min 4 offers. Bar = how often it's taken when it shows up.</p><div id="cards" class="box short"></div></div>
+<div class="panel"><h3>Chest items taken</h3><div class="chart tall"><canvas id="c_items"></canvas></div>
+<h3 style="margin-top:12px">Starting loadouts</h3><div id="loadouts"></div></div>
+</div></section>
+
+<section id="s_bosses"><div class="shead"><h2>Bosses &amp; Titans</h2></div><div class="grid2">
+<div class="panel"><h3>Boss clashes</h3><div class="scroll"><table id="clashes"></table></div><h3 style="margin-top:12px">Titans</h3><div id="titans"></div></div>
+<div class="panel"><h3>Clash length (seconds) by night — target ~38s</h3><div class="chart"><canvas id="c_clash"></canvas></div></div>
+</div>
+<div class="panel" style="margin-top:14px"><h3>Boss days: level, then fight</h3>
+<p class="note">"Lost in level" = knocked out (fell) or gave up before the fight. HP on arrival = the Lamplighter's HP reaching the fight. Trap clean = its mid-level trap cleared without a hit.</p>
+<div class="scroll"><table id="bossdays"></table></div></div></section>
+
+<section id="s_tech"><div class="shead"><h2>Music &amp; frame rate</h2><p class="note">Listening from v0.40.7 (each run counts once, its latest night; "muted" = muted or volume zero). Hearts from v0.34. FPS from v0.31; PERF = Performance mode on.</p></div>
+<div class="kpis" id="music_kpis"></div>
+<div class="grid2">
+<div class="panel"><h3>Hearted tracks</h3><div class="chart"><canvas id="c_music"></canvas></div></div>
+<div class="panel"><h3>Average FPS by night</h3><div class="chart"><canvas id="c_fps"></canvas></div></div>
+</div>
+<div class="box short" style="margin-top:12px"><table id="fps"></table></div></section>
+</main>
+<footer>Data: anonymous gameplay telemetry players opted into (Settings). Live from the game's database; events are kept in this browser so later visits only fetch what's new. <button id="reload">Reload all data</button></footer>
+<script>
+const SB = "https://ugluevzmupcacioqrmpe.supabase.co", KEY = "sb_publishable_imUXB0NUYQoNJwzLnrJdYw_7FMtFwwi";
+const $ = s => document.querySelector(s);
+const PAL = ["#ffd65a", "#8af0d0", "#ff7a6a", "#b48cff", "#6aa8ff", "#ffb04a", "#8af07a", "#f07ad8", "#d8b070", "#9fd0ff", "#ff9a50", "#c0c0c0"];
+let EV = [], RUNS = {}, charts = {}, RAW_EV = [], RAW_RUNS = [];
+const WON = new Set();   // runs with any post that won
+const CACHE_V = 1;
+
+// Everything read from the database is untrusted (anyone can post a run straight to the API, bypassing the game's
+// name filter): escape every string, and every object key, once on load so no later innerHTML can run injected markup.
+const escH = s => String(s).replace(/[&<>"'`]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#96;" }[c]));
+function clean(v) {
+  if (typeof v === "string") return escH(v);
+  if (Array.isArray(v)) return v.map(clean);
+  if (v && typeof v === "object") { const o = {}; for (const k in v) o[escH(k)] = clean(v[k]); return o; }
+  return v;
+}
+
+// ---- loading: parallel pages, an IndexedDB cache of events (insert-only), a progress bar
+const prog = { want: 0, got: 0 };
+function bar() { const p = prog.want ? Math.min(1, prog.got / prog.want) : 0; $("#loadbar").style.width = (100 * p) + "%"; if (p >= 1) setTimeout(() => $("#loadbar").style.opacity = 0, 300); }
+async function api(path, head = {}) {
+  const r = await fetch(`${SB}/rest/v1/${path}`, { headers: { apikey: KEY, ...head } });
+  if (!r.ok) throw new Error(path.split("?")[0] + " " + r.status);
+  return r;
+}
+async function countOf(table, q = "") {
+  const r = await api(`${table}?select=id&limit=1${q}`, { Prefer: "count=exact" });
+  const n = +((r.headers.get("content-range") || "").split("/")[1]);
+  return isNaN(n) ? -1 : n;
+}
+async function pool(jobs, n) {   // run async jobs n at a time, keep their order
+  const out = new Array(jobs.length); let i = 0;
+  await Promise.all(Array.from({ length: Math.min(n, jobs.length) }, async () => { while (i < jobs.length) { const k = i++; out[k] = await jobs[k](); } }));
+  return out;
+}
+async function getAll(table, select, q = "") {   // every row, by id, pages fetched in parallel when the count is known
+  const PG = 1000, n = await countOf(table, q);
+  if (n < 0) {   // no count: page one after another
+    const out = [];
+    for (let off = 0; ; off += PG) { const rows = await (await api(`${table}?select=${select}&order=id.asc&limit=${PG}&offset=${off}${q}`)).json(); out.push(...rows); prog.got += rows.length; bar(); if (rows.length < PG) return out; }
+  }
+  prog.want += n; bar();
+  const jobs = [];
+  for (let off = 0; off < n; off += PG) jobs.push(async () => { const rows = await (await api(`${table}?select=${select}&order=id.asc&limit=${PG}&offset=${off}${q}`)).json(); prog.got += rows.length; bar(); return rows; });
+  const pages = await pool(jobs, 6), out = [], seen = new Set();
+  for (const p of pages) for (const r of p) if (!seen.has(r.id)) { seen.add(r.id); out.push(r); }
+  // rows that arrived while paging (past the counted end) come with the next visit's incremental fetch
+  return out;
+}
+const idb = {
+  open() { return new Promise((ok, no) => { try { const r = indexedDB.open("hl_dash", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); } catch (e) { no(e); } }); },
+  async get(k) { try { const db = await this.open(); return await new Promise(ok => { const q = db.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => ok(q.result); q.onerror = () => ok(null); }); } catch (e) { return null; } },
+  async set(k, v) { try { const db = await this.open(); await new Promise(ok => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").put(v, k); t.oncomplete = ok; t.onerror = ok; }); } catch (e) {} },
+  async del(k) { try { const db = await this.open(); await new Promise(ok => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").delete(k); t.oncomplete = ok; t.onerror = ok; }); } catch (e) {} },
+};
+const EV_SEL = "id,run_id,created_at,version,difficulty,kind,day,platform,data";
+const RUN_SEL = "id,run_id,created_at,name,days,won,difficulty,version,hero_level,kills,in_progress,run_seconds";
+
+const vnum = v => (v || "0").split(".").map(Number).reduce((a, x) => a * 1000 + (x || 0), 0);
+const fmtDate = s => new Date(s).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+const sum = o => Object.values(o || {}).reduce((a, b) => a + (+b || 0), 0);
+const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+const median = a => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+const fmtDur = x => x == null ? "-" : x >= 3600 ? (x / 3600).toFixed(1) + "h" : Math.round(x / 60) + "m";
+const pc = (a, b) => b ? Math.round(100 * a / b) + "%" : "-";
+const dayKey = d => { const x = new Date(d); return x.getFullYear() + "-" + String(x.getMonth() + 1).padStart(2, "0") + "-" + String(x.getDate()).padStart(2, "0"); };
+
+async function load(full = false) {
+  const t0 = performance.now();
+  const runsP = getAll("runs", RUN_SEL);
+  let cached = full ? null : await idb.get("events");
+  if (cached && cached.v !== CACHE_V) cached = null;
+  if (cached && cached.rows && cached.rows.length) {
+    RAW_EV = cached.rows;
+    $("#status").textContent = `${RAW_EV.length} cached events · checking for new ones…`;
+  }
+  RAW_RUNS = clean(await runsP);
+  if (RAW_EV.length) build();   // first paint from the cache while the new events come in
+  const last = RAW_EV.length ? RAW_EV[RAW_EV.length - 1].id : 0;
+  const fresh = clean(await getAll("events", EV_SEL, last ? `&id=gt.${last}` : ""));
+  if (fresh.length || !RAW_EV.length) { RAW_EV = RAW_EV.concat(fresh); build(); }
+  idb.set("events", { v: CACHE_V, rows: RAW_EV });
+  prog.got = prog.want; bar();
+  $("#status").textContent = `${EV.length} events · ${Object.keys(RUNS).length} runs · updated ${fmtDate(new Date())} · loaded in ${((performance.now() - t0) / 1000).toFixed(1)}s` + (fresh.length && last ? ` (${fresh.length} new)` : "");
+}
+
+function build() {
+  RUNS = {}; WON.clear();
+  const runs = [...RAW_RUNS].sort((a, b) => (a.created_at || "").localeCompare(b.created_at || ""));
+  for (const r of runs) {
+    if (!r.run_id || r.run_id.startsWith("_") || (r.name || "").startsWith("_")) continue;
+    RUNS[r.run_id] = { ...r };   // latest snapshot wins (ascending order)
+    if (r.won) WON.add(r.run_id);   // ...but a run that won once stays won (an endless night's later post says won:false)
+  }
+  const ev = RAW_EV;
+  // a run that never picked a level-up card is a tooling capture (screenshots, benchmarks), not a player
+  const played = new Set(ev.filter(e => e.kind === "pick").map(e => e.run_id));
+  EV = ev.filter(e => e.run_id && !e.run_id.startsWith("_") && played.has(e.run_id));
+  const byRun = {};
+  for (const e of EV) (byRun[e.run_id] = byRun[e.run_id] || []).push(e);
+  window.BYRUN = byRun;
+  for (const id in byRun) {
+    const es = byRun[id], first = es[0], last = es[es.length - 1];
+    const nights = es.filter(e => e.kind === "night");
+    const end = es.find(e => e.kind === "run_end");
+    const st = es.find(e => e.kind === "run_start");   // a 15/20-night run walks the 30-day scale: its night N is day SCHED[N-1]
+    const maxDay = Math.max(0, ...nights.map(n => n.day));
+    const r = RUNS[id] || { run_id: id, name: "(anonymous)", difficulty: first.difficulty, version: first.version };
+    r.version = last.version || r.version;
+    r.len = st && st.data && st.data.nights ? +st.data.nights
+      : ((r.days && maxDay > r.days + 1) ? (vnum(last.version || r.version || "0") >= vnum("0.99.359") ? 15 : 20) : 30);
+    r.learn = !!(st && st.data && st.data.pace === "learner");   // a learner walks its own calendar (Data.SCHEDULE_*_LEARN)
+    r.pace = st && st.data && st.data.pace ? st.data.pace : "";
+    r.difficulty = first.difficulty || r.difficulty;
+    r.reached = Math.max(0, ...nights.map(n => nightNo(r, n.day)), r.days || 0);
+    r.level = Math.max(r.hero_level || 0, ...nights.map(n => n.data.level || 0));
+    r.won = WON.has(id) || es.some(e => e.kind === "run_end" && e.data && e.data.won);   // won if ANY post / run end won
+    r.runLen = (SCHED[r.len + (r.learn ? "L" : "")] || []).length || r.len;
+    r.endless = r.reached > r.runLen ? r.reached : 0;   // the furthest endless night, 0 if it never went past its length
+    r.night = Math.min(r.reached, r.runLen);   // the furthest night of the intended run
+    r.ended = !!end || (r.in_progress === false);
+    r.cause = end && end.data ? (end.data.cause || (end.data.won ? "" : "light out")) : "";
+    r.start = first.created_at;
+    r.last = last.created_at > (r.created_at || "") ? last.created_at : r.created_at;
+    r.platform = first.platform;
+    r.downs = es.filter(e => e.kind === "down").length;
+    const ln = nights[nights.length - 1];
+    r.threat = ln ? ln.data.threat : null;
+    r.rises = Math.max(0, ...nights.map(n => +n.data.rises_total || 0));   // rose again after a loss (from v0.41.1)
+    RUNS[id] = r;
+  }
+  for (const id of Object.keys(RUNS)) if (!byRun[id]) delete RUNS[id];
+  // a player's first run (for new vs returning)
+  window.FIRST = {};
+  for (const r of Object.values(RUNS)) if (r.name !== "(anonymous)" && (!FIRST[r.name] || r.start < FIRST[r.name])) FIRST[r.name] = r.start;
+  const keep = (sel, opts, all) => { const v = sel.value; sel.innerHTML = all + opts; if ([...sel.options].some(o => o.value === v)) sel.value = v; };
+  const vers = [...new Set(Object.values(RUNS).map(r => r.version))].sort((a, b) => vnum(a) - vnum(b));
+  keep($("#fver"), vers.map(v => `<option>${v}</option>`).join(""), '<option value="">All</option>');
+  const names = [...new Set(Object.values(RUNS).map(r => r.name))].sort((a, b) => a.localeCompare(b));
+  keep($("#fname"), names.map(n => `<option>${n}</option>`).join(""), '<option value="">Everyone</option>');
+  render();
+}
+
+const SEL = new Set();   // runs clicked in the table: when set, the whole report focuses on them
+function filtered() {
+  const v = $("#fver").value, d = $("#fdiff").value, p = $("#fpace").value, n = $("#fname").value, live = $("#flive").checked, anon = $("#fanon").checked;
+  return Object.values(RUNS).filter(r => (!v || vnum(r.version) >= vnum(v)) && (!d || r.difficulty === d) && (!n || r.name === n) && (live || r.ended)
+      && (anon || r.name !== "(anonymous)") && (!p || (p === "learner" ? r.pace === "learner" : r.pace && r.pace !== "learner")))
+    .sort((a, b) => (b.last || "").localeCompare(a.last || ""));
+}
+// (Data.SCHEDULE_15 / _15_LEARN / _20 / _20_LEARN - keep in step with scripts/data.gd)
+const SCHED = {
+  15: [1, 2, 4, 7, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30],
+  "15L": [1, 2, 3, 6, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30],
+  20: [1, 2, 3, 5, 6, 8, 10, 11, 13, 15, 16, 18, 20, 21, 23, 25, 26, 28, 29, 30],
+  "20L": [1, 2, 3, 4, 5, 6, 8, 10, 11, 13, 15, 16, 18, 20, 21, 23, 25, 26, 28, 29, 30] };
+const WIN_DAY = 30;
+// The night the player sees for day `day` of a run (Data.night_no): endless counts on past the finale.
+function nightNo(r, day) {
+  const s = r ? SCHED[r.len + (r.learn ? "L" : "")] : null;
+  if (!s) return day;
+  if (day > WIN_DAY) return s.length + day - WIN_DAY;
+  return s.filter(x => x <= day).length;
+}
+function nightsOf(id) {
+  const m = {};
+  for (const e of BYRUN[id] || []) if (e.kind === "night") m[e.day] = e.data;   // latest post per night
+  return Object.keys(m).map(Number).sort((a, b) => a - b).map(k => ({ n: nightNo(RUNS[id], k), day: k, ...m[k] }));
+}
+function mk(id, cfg) { if (!window.Chart) return; if (charts[id]) charts[id].destroy(); charts[id] = new Chart($(id), cfg); }
+function lineCfg(sets, ylab, extra = {}) {
+  return { type: "line", data: { datasets: sets }, options: { maintainAspectRatio: false, parsing: false, animation: false,
+    interaction: { mode: "nearest", intersect: false }, plugins: { legend: { display: sets.length <= 6, labels: { boxWidth: 10 } } },
+    scales: { x: { type: "linear", title: { display: true, text: "night" }, ticks: { stepSize: 1 } }, y: { title: { display: !!ylab, text: ylab }, ...extra } } } };
+}
+function barCfg(labels, data, color = "#ffb04a", horiz = true) {
+  if (!labels.length) { labels = ["no data yet"]; data = [0]; }
+  return { type: "bar", data: { labels, datasets: [{ data, backgroundColor: color, borderRadius: 3 }] }, options: { maintainAspectRatio: false, animation: false,
+    indexAxis: horiz ? "y" : "x", plugins: { legend: { display: false } }, scales: { x: { grid: { display: !horiz } }, y: { grid: { display: horiz ? false : true } } } } };
+}
+const runLabel = r => `${r.name} · ${r.run_id.slice(0, 4)} (v${r.version})`;
+const topN = (o, m = 12) => Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, m);
+const cnt = (arr, key) => arr.reduce((o, e) => (o[e.data[key] || "?"] = (o[e.data[key] || "?"] || 0) + 1, o), {});
+const empty = (msg) => `<div class="empty">${msg}</div>`;
+
+let RUN_SHOW = 100;
+function runsTable(all) {
+  const q = escH(($("#rsearch").value || "").trim().toLowerCase());
+  const list = q ? all.filter(r => (r.name || "").toLowerCase().includes(q)) : all;
+  const shown = list.slice(0, RUN_SHOW);
+  $("#rcount").textContent = `${list.length} run${list.length === 1 ? "" : "s"}` + (list.length > shown.length ? ` · showing the newest ${shown.length}` : "");
+  $("#runs").innerHTML = "<thead><tr><th>Player</th><th>Version</th><th>Mode</th><th>Pace</th><th>Night</th><th>Level</th><th>Result</th><th>Downs</th><th>Threat</th><th>Kills</th><th>Last played</th></tr></thead><tbody>" +
+    shown.map(r => `<tr class="run${SEL.has(r.run_id) ? " sel" : ""}" data-id="${r.run_id}"><td>${r.name}</td><td>v${r.version}</td><td>${r.difficulty}</td><td>${r.pace || "-"}</td><td>${r.night}</td><td>${r.level}</td>
+      <td>${r.won ? '<span class="tag won">WON' + (r.endless ? ' n' + r.runLen + ' · endless to n' + r.endless : '') + '</span>' : r.ended ? '<span class="tag lost">fell n' + r.reached + '</span>' : '<span class="tag live">in progress</span>'}${r.rises ? ' <span class="tag rose">ROSE ×' + r.rises + '</span>' : ''}</td>
+      <td>${r.downs}</td><td>${r.threat != null ? r.threat.toFixed(2) + "×" : "-"}</td><td>${r.kills ?? "-"}</td><td>${fmtDate(r.last)}</td></tr>`).join("") + "</tbody>";
+  const left = list.length - shown.length;
+  $("#rmore").style.display = left > 0 ? "block" : "none";
+  $("#rmore").textContent = `Show ${Math.min(100, left)} more (${left} older)`;
+  for (const tr of document.querySelectorAll("tr.run")) tr.onclick = (ev) => {
+    const id = tr.dataset.id;
+    if (ev.ctrlKey || ev.metaKey || ev.shiftKey) { if (SEL.has(id)) SEL.delete(id); else SEL.add(id); }
+    else if (SEL.size === 1 && SEL.has(id)) SEL.clear();
+    else { SEL.clear(); SEL.add(id); }
+    render();
+    if (SEL.size === 1) detail([...SEL][0]); else $("#detail").style.display = "none";
+  };
+}
+
+function render() {
+  const all = filtered();
+  for (const id of [...SEL]) if (!all.some(r => r.run_id === id)) SEL.delete(id);   // filtered out: drop from the selection
+  const rs = SEL.size ? all.filter(r => SEL.has(r.run_id)) : all, ids = new Set(rs.map(r => r.run_id));
+  const rsL = SEL.size || $("#fallc").checked ? rs : rs.slice(0, 8);   // runs drawn as lines on the charts
+  $("#selbar").style.display = SEL.size ? "block" : "none";
+  $("#selbar").innerHTML = SEL.size ? `Showing ${rs.length === 1 ? "one run" : rs.length + " runs"}: ${rs.map(runLabel).join(", ")}<button id="selclear">Show all runs</button>` : "";
+  if (SEL.size) $("#selclear").onclick = () => { SEL.clear(); $("#detail").style.display = "none"; render(); };
+  const evs = EV.filter(e => ids.has(e.run_id));
+  const nights = rs.flatMap(r => nightsOf(r.run_id).map(n => ({ ...n, run: r })));
+  const fin = rs.filter(r => r.ended || r.won), fin15 = fin.filter(r => r.runLen === 15);
+
+  // ---- KPIs
+  const named = rs.filter(r => r.name !== "(anonymous)"), per = {};
+  for (const r of named) per[r.name] = (per[r.name] || 0) + 1;
+  const pl = Object.keys(per).length, ret = Object.values(per).filter(n => n > 1).length;
+  const wk = Date.now() - 7 * 864e5, wkRuns = rs.filter(r => new Date(r.start) >= wk);
+  const won = fin.filter(r => r.won).length;
+  const quit = rs.filter(r => !r.ended && !r.won && Date.now() - new Date(r.last) > 2 * 864e5), q1 = quit.filter(r => r.night <= 1).length;
+  const k = [
+    [pl, "players", `${ret} came back for 2+ runs (${pc(ret, pl)})`, "var(--gold)"],
+    [rs.length, "runs", `${wkRuns.length} in the last 7 days`, "var(--gold)"],
+    [pc(won, fin.length), "win rate", `${won} of ${fin.length} finished runs`, "var(--teal)"],
+    [fin15.length ? median(fin15.map(r => r.night)) : "-", "median night reached", `finished 15-night runs · furthest ${rs.length ? Math.max(...rs.map(r => r.night)) : 0}`, "var(--ember)"],
+    [pc(quit.length, rs.length), "likely quit", `left mid-run 2+ days ago · ${q1} on night 1`, "var(--red)"],
+    [rs.length ? (rs.reduce((a, r) => a + r.downs, 0) / rs.length).toFixed(1) : "-", "downs per run", `${evs.filter(e => e.kind === "down").length} in all`, "var(--red)"],
+    [fmtDur(median(rs.map(r => +r.run_seconds || 0).filter(x => x > 0))), "median play time", `per run · a player's total ${fmtDur(median(Object.values(rs.reduce((o, r) => { if (+r.run_seconds > 0 && r.name !== "(anonymous)") o[r.name] = (o[r.name] || 0) + (+r.run_seconds); return o; }, {}))))}`, "var(--violet)"],
+    [(rs.reduce((a, r) => a + (+r.run_seconds || 0), 0) / 3600).toFixed(1), "hours played", "named runs", "var(--violet)"],
+    [rs[0] ? "v" + rs.map(r => r.version).sort((a, b) => vnum(b) - vnum(a))[0] : "-", "newest version", `${rs.filter(r => r.pace === "learner").length} learner · ${rs.filter(r => r.pace && r.pace !== "learner").length} veteran runs`, "var(--blue)"],
+  ];
+  $("#kpis").innerHTML = k.map(([v, l, s, c]) => `<div class="kpi" style="--k:${c}"><b>${v}</b><span>${l}</span>${s ? "<small>" + s + "</small>" : ""}</div>`).join("");
+
+  // ---- health
+  const surv = (list) => { const out = []; for (let n = 1; n <= 15; n++) out.push({ x: n, y: list.length ? Math.round(1000 * list.filter(r => r.night >= n).length / list.length) / 10 : null }); return out; };
+  const sv = [{ label: `all (${fin15.length})`, list: fin15, c: "#ffd65a" }, { label: "learner", list: fin15.filter(r => r.pace === "learner"), c: "#8af0d0" },
+    { label: "veteran", list: fin15.filter(r => r.pace && r.pace !== "learner"), c: "#ff7a6a" }].filter(s => s.list.length)
+    .map(s => ({ label: s.label === "learner" || s.label === "veteran" ? `${s.label} (${s.list.length})` : s.label, data: surv(s.list), borderColor: s.c, backgroundColor: s.c, pointRadius: 2, borderWidth: 2, tension: 0.15 }));
+  mk("#c_surv", lineCfg(sv, "% of runs", { min: 0, max: 100 }));
+  const endN = {}, causes = {};
+  for (const r of fin15) { if (r.won) continue; endN[r.night] = (endN[r.night] || 0) + 1; const c = r.cause || "unknown"; causes[c] = (causes[c] || 0) + 1; }
+  const maxN = Math.max(15, ...Object.keys(endN).map(Number)), lbl = [], dat = [];
+  for (let n = 1; n <= maxN; n++) { lbl.push("n" + n); dat.push(endN[n] || 0); }
+  lbl.push("won"); dat.push(fin15.filter(r => r.won).length);
+  mk("#c_end", { type: "bar", data: { labels: lbl, datasets: [{ data: dat, backgroundColor: lbl.map(l => l === "won" ? "#8af0d0" : "#ff7a6a"), borderRadius: 3 }] },
+    options: { maintainAspectRatio: false, animation: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } } });
+  const abandoned = rs.filter(r => !r.ended && !r.won && Date.now() - new Date(r.last) > 2 * 864e5);
+  $("#end_note").textContent = `Lost runs by cause: ${topN(causes).map(([c, n]) => c + " " + n).join(", ") || "none"} · ${abandoned.length} in-progress run${abandoned.length === 1 ? "" : "s"} untouched for 2+ days (likely quit)` +
+    (abandoned.length ? `, most often on night ${topN(abandoned.reduce((o, r) => (o[r.night] = (o[r.night] || 0) + 1, o), {}), 1)[0][0]}` : "");
+  const days = [], newP = {}, retP = {}, anonD = {};
+  for (let i = 29; i >= 0; i--) days.push(dayKey(Date.now() - i * 864e5));
+  for (const r of rs) {
+    const d = dayKey(r.start); if (!days.includes(d)) continue;
+    if (r.name === "(anonymous)") anonD[d] = (anonD[d] || 0) + 1;
+    else if (dayKey(FIRST[r.name]) === d) newP[d] = (newP[d] || 0) + 1; else retP[d] = (retP[d] || 0) + 1;
+  }
+  const dsets = [{ label: "new player's runs", data: days.map(d => newP[d] || 0), backgroundColor: "#ffd65a" }, { label: "returning", data: days.map(d => retP[d] || 0), backgroundColor: "#8af0d0" }];
+  if ($("#fanon").checked) dsets.push({ label: "anonymous", data: days.map(d => anonD[d] || 0), backgroundColor: "#6f6880" });
+  mk("#c_daily", { type: "bar", data: { labels: days.map(d => d.slice(5)), datasets: dsets }, options: { maintainAspectRatio: false, animation: false,
+    plugins: { legend: { labels: { boxWidth: 10 } } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, ticks: { precision: 0 } } } } });
+  retention(rs);
+  const byV = {};
+  for (const r of rs) (byV[r.version] = byV[r.version] || []).push(r);
+  const vrows = Object.entries(byV).sort((a, b) => vnum(b[0]) - vnum(a[0])).slice(0, 12);
+  $("#versions").innerHTML = "<thead><tr><th>Version</th><th>Runs</th><th>Players</th><th>Win rate</th><th>Median night</th><th>Downs / run</th><th>Avg level</th></tr></thead><tbody>" +
+    (vrows.map(([v, l]) => { const f = l.filter(r => r.ended || r.won), w = f.filter(r => r.won).length;
+      return `<tr><td>v${v}</td><td>${l.length}</td><td>${new Set(l.filter(r => r.name !== "(anonymous)").map(r => r.name)).size}</td><td>${pc(w, f.length)}${f.length ? ' <span class="note">(' + w + '/' + f.length + ')</span>' : ""}</td>
+        <td>${f.length ? median(f.map(r => r.night)) : "-"}</td><td>${(l.reduce((a, r) => a + r.downs, 0) / l.length).toFixed(1)}</td><td>${(l.reduce((a, r) => a + r.level, 0) / l.length).toFixed(1)}</td></tr>`; }).join("") ||
+      '<tr><td colspan="7" class="empty">No runs.</td></tr>') + "</tbody>";
+
+  // ---- runs table
+  runsTable(all);
+
+  // ---- night-by-night lines, one per run
+  const perRun = (f) => rsL.map((r, i) => ({ label: runLabel(r), data: nightsOf(r.run_id).map(n => ({ x: n.n, y: f(n) })).filter(p => p.y != null && !isNaN(p.y)),
+    borderColor: PAL[i % PAL.length], backgroundColor: PAL[i % PAL.length], pointRadius: 2, borderWidth: 2, tension: 0.2 })).filter(s => s.data.length);
+  mk("#c_level", lineCfg(perRun(n => n.level), "level"));
+  mk("#c_threat", lineCfg(perRun(n => n.threat), "× monster HP"));
+  mk("#c_minhp", lineCfg(perRun(n => n.night_min_hp != null ? n.night_min_hp * 100 : null), "%", { min: 0, max: 100 }));
+  mk("#c_herosh", lineCfg(perRun(n => { const t = sum(n.dmg_dealt); return t ? 100 * ((n.dmg_dealt.hero || 0) + (n.dmg_dealt.gun || 0)) / t : null; }), "%", { min: 0, max: 100 }));
+  mk("#c_dmgtaken", lineCfg(perRun(n => n.dmg_taken ? sum(n.dmg_taken) : null), "damage"));
+  mk("#c_leaks", lineCfg(perRun(n => n.leaks), "leaks", { min: 0 }));
+  mk("#c_gold", lineCfg(perRun(n => n.gold), "gold"));
+  mk("#c_light", lineCfg(perRun(n => n.ember_max ? 100 * n.ember / n.ember_max : null), "%", { min: 0, max: 100 }));
+
+  // ---- danger
+  const src = {};
+  for (const n of nights) for (const [kk, v] of Object.entries(n.dmg_taken || {})) src[kk] = (src[kk] || 0) + v;
+  let t = topN(src); mk("#c_src", barCfg(t.map(x => x[0]), t.map(x => Math.round(x[1])), "#ff7a6a"));
+  const downs = evs.filter(e => e.kind === "down"), close = evs.filter(e => e.kind === "close_call" && e.data.what === "hp");
+  t = topN(cnt(downs, "by")); mk("#c_downs", barCfg(t.map(x => x[0]), t.map(x => x[1]), "#ff7a6a"));
+  t = topN(cnt(close, "by")); mk("#c_close", barCfg(t.map(x => x[0]), t.map(x => x[1]), "#ffb04a"));
+  const wd = cnt(downs, "area"), wc = cnt(close, "area");
+  $("#danger_where").textContent = `Downs by where: ${Object.entries(wd).map(([a, b]) => a + " " + b).join(", ") || "none"} · Close calls by where: ${Object.entries(wc).map(([a, b]) => a + " " + b).join(", ") || "none"} · Light close calls: ${evs.filter(e => e.kind === "close_call" && e.data.what === "light").length}`;
+  const dealt = {};
+  // (a night logging over 1e8 from one source is a telemetry glitch - before 0.99.348 a hit's overkill counted, and a
+  // powder keg's x10 blow-up once logged 1.7 billion "gun" damage in one night - so it's left out, and said so)
+  let badN = 0;
+  for (const n of nights) {
+    const dd = n.dmg_dealt || {};
+    if (Object.values(dd).some(v => v > 1e8)) { badN++; continue; }
+    for (const [kk, v] of Object.entries(dd)) dealt[kk] = (dealt[kk] || 0) + v;
+  }
+  $("#dealt_note").textContent = (badN ? `${badN} night${badN > 1 ? "s" : ""} with impossible damage left out. ` : "") + "Before 0.99.348 a hit counted its overkill too, so big single hits (the gun, kegs) read high on older nights.";
+  const dt = sum(dealt) || 1; t = topN(dealt, 14);
+  mk("#c_dealt", barCfg(t.map(x => x[0] + " " + Math.round(100 * x[1] / dt) + "%"), t.map(x => Math.round(x[1])), "#8af0d0"));
+
+  // ---- economy
+  const gi = {}, go = {}, mats = {}; let gN = 0, mN = 0;
+  for (const n of nights) {
+    if (n.gold_in || n.gold_out) { gN++; for (const [kk, v] of Object.entries(n.gold_in || {})) gi[kk] = (gi[kk] || 0) + (+v || 0); for (const [kk, v] of Object.entries(n.gold_out || {})) go[kk] = (go[kk] || 0) + (+v || 0); }
+    if (n.day_obj && n.day_obj.got) { mN++; for (const [kk, v] of Object.entries(n.day_obj.got)) mats[kk] = (mats[kk] || 0) + (+v || 0); }
+  }
+  const perN = (o, d) => topN(o, 14).map(([a, b]) => [a, Math.round(b / (d || 1))]);
+  t = perN(gi, gN); mk("#c_goldin", barCfg(t.map(x => x[0]), t.map(x => x[1]), "#ffd65a"));
+  t = perN(go, gN); mk("#c_goldout", barCfg(t.map(x => x[0]), t.map(x => x[1]), "#ffb04a"));
+  t = perN(mats, mN); mk("#c_mats", barCfg(t.map(x => x[0]), t.map(x => x[1]), "#9fd0ff"));
+  const bench = {}; let bRuns = 0;
+  for (const r of rs) { const ns = nightsOf(r.run_id).filter(n => n.bench); if (!ns.length) continue; bRuns++;
+    for (const [kk, v] of Object.entries(ns[ns.length - 1].bench)) if (v) bench[kk] = (bench[kk] || 0) + 1; }
+  $("#bench").innerHTML = bRuns ? "<table><thead><tr><th>Recipe</th><th>Runs</th><th>Share</th></tr></thead><tbody>" + topN(bench, 60).map(([kk, v]) =>
+    `<tr><td>${kk}</td><td>${v}</td><td><span class="hbar" style="width:${Math.round(90 * v / bRuns)}px"></span>${pc(v, bRuns)}</td></tr>`).join("") + "</tbody></table>" : empty("No Workbench data yet.");
+
+  // ---- play style
+  const U = [["shots", "shots_day", "Shots"], ["dash", "dash_day", "Dashes"], ["flare", "flare_day", "Flares"], ["run", "run_day", "Seconds running"],
+    ["gun_secs", "gun_secs_day", "Seconds with a gun out"], ["gun_swaps", null, "Gun swaps"], ["winded", "winded_day", "Winded"]];
+  const un = nights.filter(n => n.use);
+  $("#use").innerHTML = un.length ? "<table><thead><tr><th>Action</th><th>Day</th><th>Night</th><th>Nights used</th></tr></thead><tbody>" + U.map(([nk, dk, lab]) => {
+    const nv = un.map(n => +n.use[nk] || 0), dv = dk ? un.map(n => +n.use[dk] || 0) : [];
+    return `<tr><td>${lab}</td><td>${dk ? avg(dv).toFixed(1) : "-"}</td><td>${avg(nv).toFixed(1)}</td><td>${pc(nv.filter(x => x > 0).length, nv.length)}</td></tr>`; }).join("") +
+    `</tbody></table><p class="note" style="margin:6px 0 0">${un.length} nights.</p>` : empty("No action data yet.");
+  const goals = {};
+  for (const n of nights) if (n.dawn_goal && n.dawn_goal.id) { const g = goals[n.dawn_goal.id] = goals[n.dawn_goal.id] || [0, 0]; g[0]++; if (n.dawn_goal.done) g[1]++; }
+  const gl = Object.entries(goals).sort((a, b) => b[1][0] - a[1][0]);
+  $("#goals").innerHTML = gl.length ? "<table><thead><tr><th>Goal</th><th>Done</th></tr></thead><tbody>" + gl.map(([g, [n, d]]) =>
+    `<tr><td>${g}</td><td><span class="hbar" style="width:${Math.round(60 * d / n)}px;background:var(--teal)"></span>${pc(d, n)} <span class="note">of ${n}</span></td></tr>`).join("") + "</tbody></table>" : empty("No dawn goals logged.");
+  t = topN(cnt(evs.filter(e => e.kind === "blueprint"), "id"), 16); mk("#c_bp", barCfg(t.map(x => x[0]), t.map(x => x[1]), "#6aa8ff"));
+
+  // ---- builds
+  const off = {}, got = {};
+  for (const e of evs.filter(e => e.kind === "pick")) {
+    got[e.data.picked] = (got[e.data.picked] || 0) + 1;
+    for (const o of e.data.offered || []) off[o] = (off[o] || 0) + 1;
+  }
+  const rows = Object.keys(off).filter(c => off[c] >= 4).map(c => [c, (got[c] || 0) / off[c], off[c], got[c] || 0]).sort((a, b) => b[1] - a[1]);
+  $("#cards").innerHTML = rows.length ? "<table><thead><tr><th>Card</th><th>Pick rate</th><th>Offered</th><th>Taken</th></tr></thead><tbody>" + rows.map(([c, r, o, g]) =>
+    `<tr><td>${c}</td><td><span class="hbar" style="width:${Math.round(r * 90)}px"></span>${Math.round(r * 100)}%</td><td>${o}</td><td>${g}</td></tr>`).join("") + "</tbody></table>" : empty("Not enough picks yet.");
+  t = topN(cnt(evs.filter(e => e.kind === "item"), "picked"), 16); mk("#c_items", barCfg(t.map(x => x[0]), t.map(x => x[1]), "#b48cff"));
+  const lo = {};
+  for (const e of evs.filter(e => e.kind === "run_start")) for (const [kk, v] of Object.entries(e.data.loadout || {})) if (v && v !== "none") lo[kk + ": " + v] = (lo[kk + ": " + v] || 0) + 1;
+  $("#loadouts").innerHTML = topN(lo, 20).map(([kk, v]) => `<span class="pill">${kk} <i>×${v}</i></span>`).join("") || empty("None picked yet.");
+
+  // ---- bosses: boss days (a level's own fail, "fight": "level", or a fight that came through a level, "pay" attached)
+  const bd = {};
+  for (const e of evs.filter(e => e.kind === "clash" && e.data && (e.data.fight === "level" || e.data.pay))) {
+    const d = e.data, b = d.boss, r = (bd[b] = bd[b] || { n: 0, fell: 0, gave: 0, won: 0, lost: 0, bell: [], hp: [], clean: 0, trapped: 0, where: {} });
+    const p = d.pay || {};
+    r.n += 1;
+    if (d.fight === "level") {
+      if (p.why === "gave_up") r.gave += 1; else r.fell += 1;
+      if (p.where) r.where[p.where] = (r.where[p.where] || 0) + 1;
+    } else {
+      if (d.won) r.won += 1; else r.lost += 1;
+      if (p.hp != null) r.hp.push(+p.hp);
+    }
+    if (p.bell != null) r.bell.push(+p.bell);
+    if (p.trap === "clean" || p.trap === "done") { r.trapped += 1; if (p.trap === "clean") r.clean += 1; }
+  }
+  $("#bossdays").innerHTML = "<thead><tr><th>Boss</th><th>Days</th><th>Lost in level</th><th>Fight won</th><th>Fight lost</th><th>Avg level time</th><th>HP on arrival</th><th>Trap clean</th><th>Where levels were lost</th></tr></thead><tbody>" +
+    (Object.keys(bd).length ? Object.entries(bd).map(([b, r]) => `<tr><td>${b}</td><td>${r.n}</td><td>${r.fell + r.gave}${r.gave ? " (" + r.gave + " gave up)" : ""}</td><td>${r.won}</td><td>${r.lost}</td>
+      <td>${avg(r.bell) != null ? avg(r.bell).toFixed(0) + "s" : "-"}</td><td>${avg(r.hp) != null ? Math.round(100 * avg(r.hp)) + "%" : "-"}</td><td>${pc(r.clean, r.trapped)}</td>
+      <td>${Object.entries(r.where).map(([w, k]) => w + " ×" + k).join(", ") || "-"}</td></tr>`).join("") : '<tr><td colspan="9" class="empty">No boss days played yet.</td></tr>') + "</tbody>";
+  const cl = evs.filter(e => e.kind === "clash"), bb = {};
+  for (const c of cl) (bb[c.data.boss] = bb[c.data.boss] || []).push(c.data);
+  $("#clashes").innerHTML = "<thead><tr><th>Boss</th><th>Fights</th><th>Won</th><th>Avg seconds</th><th>Avg HP left</th></tr></thead><tbody>" + (Object.entries(bb).map(([b, cs]) =>
+    `<tr><td>${b}</td><td>${cs.length}</td><td>${Math.round(100 * cs.filter(c => c.won).length / cs.length)}%</td><td>${(cs.reduce((a, c) => a + (c.seconds || 0), 0) / cs.length).toFixed(1)}</td><td>${Math.round(100 * cs.reduce((a, c) => a + (c.hp_left || 0), 0) / cs.length)}%</td></tr>`).join("") ||
+    '<tr><td colspan="5" class="empty">No clashes yet.</td></tr>') + "</tbody>";
+  mk("#c_clash", { type: "scatter", data: { datasets: [{ label: "won", data: cl.filter(c => c.data.won).map(c => ({ x: nightNo(RUNS[c.run_id], c.day), y: c.data.seconds })), backgroundColor: "#8af0d0" },
+    { label: "lost", data: cl.filter(c => !c.data.won).map(c => ({ x: nightNo(RUNS[c.run_id], c.day), y: c.data.seconds })), backgroundColor: "#ff7a6a" }] },
+    options: { maintainAspectRatio: false, animation: false, scales: { x: { title: { display: true, text: "night" } }, y: { title: { display: true, text: "seconds" }, min: 0 } } } });
+  const ti = evs.filter(e => e.kind === "titan"), tg = {};
+  for (const e of ti) { const g = tg[e.data.titan] = tg[e.data.titan] || [0, 0]; g[0]++; if (e.data.slain) g[1]++; }
+  $("#titans").innerHTML = ti.length ? Object.entries(tg).map(([n, [a, s]]) => `<span class="pill">${n} <i>met ${a} · slain ${s}</i></span>`).join("") : empty("None yet.");
+
+  // ---- music: per run, the latest night that reports music, plus totals across its nights
+  const lis = {};
+  for (const e of evs.filter(e => e.kind === "night" && e.data && e.data.music)) {
+    const m = e.data.music, L = lis[e.run_id] = lis[e.run_id] || { on: true, toggles: 0, share: 0, n: 0, day: -1 };
+    if (e.day >= L.day) { L.day = e.day; L.on = !!m.on; }
+    L.toggles += +m.toggles || 0; L.share += +m.muted_share || 0; L.n += 1;
+  }
+  const lr = Object.values(lis);
+  $("#music_kpis").innerHTML = lr.length ? [
+    [pc(lr.filter(L => L.on).length, lr.length), "have music ON now"],
+    [pc(lr.filter(L => L.toggles > 0).length, lr.length), "switched it on/off at least once"],
+    [Math.round(100 * lr.reduce((a, L) => a + L.share / L.n, 0) / lr.length) + "%", "of play time muted (avg)"],
+    [lr.length, "runs reporting"],
+  ].map(([b, t]) => `<div class="kpi" style="--k:#ff5a7a"><b>${b}</b><span>${t}</span></div>`).join("") : empty("No listening data yet (starts with v0.40.7).");
+  const lastLike = {};
+  for (const e of evs.filter(e => e.kind === "music_like")) lastLike[e.run_id + "|" + e.data.track] = e.data.liked;
+  const hearts = {};
+  for (const [kk, v] of Object.entries(lastLike)) { const tr = kk.split("|")[1]; hearts[tr] = (hearts[tr] || 0) + (v ? 1 : 0); }
+  const hm = Object.entries(hearts).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]);
+  mk("#c_music", barCfg(hm.map(x => x[0]), hm.map(x => x[1]), "#ff5a7a"));
+  // ---- fps
+  const fr = nights.filter(n => n.perf_night);
+  const fsets = rsL.map((r, i) => ({ label: runLabel(r), data: nightsOf(r.run_id).filter(n => n.perf_night).map(n => ({ x: n.n, y: n.perf_night.fps })),
+    borderColor: PAL[i % PAL.length], backgroundColor: PAL[i % PAL.length], pointRadius: 3, borderWidth: 2 })).filter(s => s.data.length);
+  mk("#c_fps", lineCfg(fsets, "fps", { min: 0 }));
+  $("#fps").innerHTML = fr.length ? "<thead><tr><th>Run</th><th>Night</th><th>Day fps</th><th>Night fps</th><th>Worst 2s</th><th>&lt;30fps</th><th>Lights</th><th>Screen</th><th></th></tr></thead><tbody>" +
+    fr.slice(-40).reverse().map(n => `<tr><td>${n.run.name}</td><td>${n.n}</td><td>${(n.perf_day || {}).fps ?? "-"}</td><td>${n.perf_night.fps}</td><td>${n.perf_night.fps_low}</td>
+      <td>${Math.round(100 * (n.perf_night.slow_frames || 0))}%</td><td>${n.perf_night.lights ?? "-"}</td><td>${n.perf_night.screen || ""}</td><td>${n.perf_night.perf_mode ? '<span class="tag live">PERF</span>' : ""}</td></tr>`).join("") + "</tbody>"
+    : '<tbody><tr><td class="empty">No frame-rate data yet (needs players on v0.31+).</td></tr></tbody>';
+}
+
+// ---- retention over time: real dates along the bottom
+const PATCHES = {"0.99.432": "Clear Nights", "0.99.431": "Safe Footing", "0.99.430": "Scoop and Shatter", "0.99.429": "Quiet Screen", "0.99.428": "Straight to the Purse", "0.99.427": "Two at a Time", "0.99.426": "Hunters in the Dark", "0.99.425": "Back to Basics", "0.99.424": "Shatter", "0.99.423": "Daily Quests", "0.99.422": "The King's Court", "0.99.421": "Lay Into It", "0.99.420": "Clear Sight", "0.99.419": "Fair Fight", "0.99.418": "Wider Circles", "0.99.417": "Old Roots", "0.99.416": "Keep It Lit", "0.99.415": "First Light", "0.99.414": "Steadier", "0.99.413": "Cleaner, Fairer, Faster", "0.99.412": "The Long Night", "0.99.411": "Solid ground", "0.99.410": "Warnings you can trust", "0.99.409": "Quicker gathering early on", "0.99.408": "A clearer screen", "0.99.407": "The Wardburner scorches", "0.99.406": "Steadier dusk, more to build early", "0.99.405": "Smoother trips, a heavier revolver", "0.99.404": "Tougher bosses, clearer villagers", "0.99.403": "Fixes: your Embers, music and the War Table", "0.99.402": "Smoother moves and fewer words", "0.99.401": "Less spare gold", "0.99.400": "Fixes: music, controller and bosses", "0.99.399": "Cleaner cards and a clearer Knell", "0.99.398": "A fresh start: the Workbench, aimed abilities and a new dawn", "0.99.397": "Fixes and a closer jukebox", "0.99.396": "One tower per job", "0.99.395": "A clearer Surface", "0.99.394": "Steady hands", "0.99.393": "No surprise level-ups", "0.99.392": "Fits on the screen, cheaper fire", "0.99.391": "Stand with your towers", "0.99.390": "Split the moon", "0.99.389": "Shoot your own magic", "0.99.388": "Ring the bell", "0.99.387": "The third tunnel", "0.99.386": "A clearer night", "0.99.385": "Nests, nights and nerve", "0.99.384": "Aim and stone", "0.99.383": "Still learning", "0.99.382": "Slide, guide and grove", "0.99.381": "Crisp text", "0.99.380": "Slip past", "0.99.379": "Calmer nights", "0.99.378": "A better seventh shot", "0.99.377": "A map of what matters", "0.99.376": "Know before you spend", "0.99.375": "A calmer Surface", "0.99.374": "Home for the day", "0.99.373": "No slow-motion cards", "0.99.372": "New ground", "0.99.371": "Where you placed", "0.99.370": "Leaderboard fixes", "0.99.369": "A much simpler screen", "0.99.368": "Acts open in the morning", "0.99.367": "Gold and lanes for 15 nights", "0.99.366": "Swap screens", "0.99.365": "Home early, readable monster cards", "0.99.364": "Know your enemy", "0.99.363": "Fewer repeats", "0.99.362": "Dawn goals", "0.99.361": "A smaller, sharper deck", "0.99.360": "The quest comes first", "0.99.359": "Fifteen nights", "0.99.358": "A cleaner top bar", "0.99.357": "Menus that close the same way", "0.99.356": "Bosses that hold up", "0.99.355": "Fewer pop-ups at once", "0.99.354": "A simpler pause menu", "0.99.353": "Salvage", "0.99.352": "Something to do up top", "0.99.351": "The Long Night's fog", "0.99.350": "Time to read, and a real gust", "0.99.349": "All pixels", "0.99.348": "One message at a time", "0.99.347": "Upgrades that say what they do", "0.99.346": "One thing at a time", "0.99.345": "Fight, then home", "0.99.344": "A calmer first session", "0.99.343": "Music that moves on, and a shake switch", "0.99.342": "Ammo at the crosshair", "0.99.341": "Hold to fire", "0.99.340": "First-day gathering with a purpose", "0.99.339": "Boss days, explained", "0.99.338": "Charged shots, explained", "0.99.337": "Out of the way, and a few nudges", "0.99.336": "No stuck numbers", "0.99.335": "Readable ground", "0.99.334": "Iron, repairs, and cards you can read", "0.99.333": "The checklist gives way", "0.99.332": "Crisp text, smoother building", "0.99.331": "Day 2, guided; a gentler first Overtime", "0.99.330": "Hits that land", "0.99.329": "First day: copper, and no cover", "0.99.328": "A clearer defeat screen", "0.99.327": "Your first day, guided", "0.99.326": "E beside a tower", "0.99.325": "Overtime, harsher", "0.99.324": "Overtime, faster", "0.99.323": "A calmer map", "0.99.322": "Overtime bites", "0.99.321": "A clearer map", "0.99.320": "Slide", "0.99.319": "Gear that looks the part", "0.99.318": "The way to the boss", "0.99.317": "A heap worth the name", "0.99.316": "The old gate", "0.99.315": "Edged monsters on the Surface", "0.99.314": "Cleaner damage numbers", "0.99.313": "Fix", "0.99.312": "Windows in the Belfry", "0.99.311": "Fix: the dawn show", "0.99.310": "Auto-dim when busy", "0.99.309": "Feel the hits", "0.99.308": "Fair warning", "0.99.307": "Inside the Maw", "0.99.306": "Three guns", "0.99.305": "A slimmer boss-level bar", "0.99.304": "The map to the lair", "0.99.303": "New skies", "0.99.302": "What the places remember", "0.99.301": "Bridges, not leaps", "0.99.300": "The boss level, explained", "0.99.299": "Gunmen, explained", "0.99.298": "The dawn comes alive", "0.99.297": "The Ashfield is fairer", "0.99.296": "Fix", "0.99.295": "The Dawn Hoard", "0.99.294": "Gear with no downsides, and new twists", "0.99.293": "Towers join the boss fights", "0.99.292": "Fixes", "0.99.291": "Nests, gifts and a quicker pick", "0.99.290": "The holster", "0.99.289": "Readable in Performance mode", "0.99.288": "Point and place", "0.99.287": "Fix: tunnel tag", "0.99.286": "Smaller by default", "0.99.285": "Out of the way", "0.99.284": "Less on screen", "0.99.283": "Room to see", "0.99.282": "Get your bearings", "0.99.281": "Time to read", "0.99.280": "Easier gunmen on Ease", "0.99.279": "Towers first", "0.99.278": "A shorter head", "0.99.277": "Shells for the Deep", "0.99.276": "Deep practice", "0.99.275": "The Deep strikes back", "0.99.274": "Rising tide", "0.99.273": "Set dressing", "0.99.272": "Bring it home", "0.99.271": "Your moves", "0.99.270": "Forge guns", "0.99.269": "Pairing up", "0.99.268": "Show your guns", "0.99.267": "Under the hood", "0.99.266": "First shots", "0.99.265": "A closer look", "0.99.264": "The Drowned Deep", "0.99.263": "Etchings III: Signatures", "0.99.262": "Etchings II", "0.99.261": "Faces in the dark", "0.99.260": "A heart, not a hoard", "0.99.259": "Etchings", "0.99.258": "Coins for the light", "0.99.257": "The way out", "0.99.256": "Tidy hands", "0.99.255": "Catch your breath", "0.99.254": "Smoother nights", "0.99.253": "Night jobs", "0.99.252": "Hold the line", "0.99.251": "Nowhere is safe", "0.99.250": "The gunmen dig in", "0.99.249": "Room to breathe", "0.99.248": "The dark notices", "0.99.247": "The day starts when you do", "0.99.246": "The Sun stands its ground", "0.99.245": "The day waits for you", "0.99.244": "Every boss its own (part 2)", "0.99.243": "Every boss its own (part 1)", "0.99.242": "Slung", "0.99.241": "A tidier HUD", "0.99.240": "Unstuck", "0.99.239": "The night court, redrawn", "0.99.238": "Clearer boss days", "0.99.237": "The Gilded Magpie", "0.99.236": "Eyes on the gunman", "0.99.235": "Steady hands", "0.99.234": "No falling off the world", "0.99.233": "Candlefire", "0.99.232": "The Lamplighter's kit", "0.99.231": "A quieter title", "0.99.230": "Pad and keys alike", "0.99.229": "A kinder start", "0.99.228": "Point and shoot", "0.99.227": "A fresh start", "0.99.226": "Behind the scenes", "0.99.225": "Kit that changes the rules", "0.99.224": "Kit on the ground (test)", "0.99.223": "Epic finds", "0.99.222": "Eyes on the target", "0.99.221": "Clearer in the chaos", "0.99.220": "Easier to see", "0.99.219": "Pods, bulbs and the stair", "0.99.218": "A deeper world", "0.99.217": "Landmarks restored", "0.99.216": "The gunmen get faces", "0.99.215": "Things go boom", "0.99.214": "Four new guns", "0.99.213": "The day bosses, reborn", "0.99.212": "Light and shadow", "0.99.211": "Deep water", "0.99.210": "Rock in layers", "0.99.209": "The Rot Beneath", "0.99.208": "Point blank", "0.99.207": "A fairer first week", "0.99.206": "A Surface of its own", "0.99.205": "New faces", "0.99.204": "Searchlights in the Belfry", "0.99.203": "No more light seams", "0.99.202": "Something in the bog", "0.99.201": "The right name on the door", "0.99.200": "Your weapons bite bosses harder", "0.99.199": "No more stuck slow motion", "0.99.198": "A gentler first boss", "0.99.197": "Bosses go down sooner", "0.99.196": "A gentler first boss", "0.99.195": "Heads up, new tunnel", "0.99.194": "Embers home", "0.99.193": "Right here", "0.99.192": "Aim for the mark", "0.99.191": "Titans hold", "0.99.190": "Bosses stand their ground", "0.99.189": "Steadier hoses, shinier ice", "0.99.188": "Settings on Select", "0.99.187": "A warmer village", "0.99.186": "The Hollowlight breathes", "0.99.185": "Towers hold the lanes", "0.99.184": "Day bosses fight back", "0.99.183": "Place it here", "0.99.182": "The Titans stir", "0.99.181": "A new name", "0.99.180": "Old Man Cognito", "0.99.179": "Crates you can actually crack", "0.99.178": "A proper workshop", "0.99.177": "Select for the War Table, pickaxes for caches", "0.99.176": "Everything looks (and moves) better", "0.99.175": "Splats, crunches and thomps", "0.99.174": "A keyboard for your name, and unlocks that break open", "0.99.173": "The Lamplighter moves", "0.99.172": "Steer the build", "0.99.171": "Steady New Run controls", "0.99.170": "Forge card fix", "0.99.169": "Puzzles, polish and a new title", "0.99.168": "Guns in every boss level", "0.99.167": "New Run and long lists on a controller", "0.99.166": "Bosses shrug off even more", "0.99.165": "Y repairs at night, unplug pauses", "0.99.164": "The Hollow learns, and says so", "0.99.163": "Bosses shrug off autos", "0.99.162": "Calmer busy nights", "0.99.161": "Gold ring everywhere", "0.99.160": "A ribbon for the quips", "0.99.159": "Read everything on a controller", "0.99.158": "A opens a tower", "0.99.157": "A tag on the lantern", "0.99.156": "No more keys on a controller", "0.99.155": "Scroll with the right stick", "0.99.154": "LT cancels a build", "0.99.153": "War Table on a controller", "0.99.152": "Controller: out of every screen", "0.99.151": "Every controller works", "0.99.150": "Wisps bat bullets away", "0.99.149": "A word about the Workbench", "0.99.148": "Continue from day one", "0.99.147": "Clarity on busy nights", "0.99.146": "The cistern stays open", "0.99.145": "Continue later", "0.99.144": "Gunmen in the open", "0.99.143": "A new dawn", "0.99.142": "A performance pass", "0.99.141": "Shields give out", "0.99.140": "No forced Glass Hearts", "0.99.139": "The gold note waits for the Hollow", "0.99.138": "Words before the fight, in the room", "0.99.137": "A new Magpie", "0.99.136": "A harder fall", "0.99.135": "A moment with your new gun", "0.99.134": "Fewer traps for the unwary", "0.99.133": "Shoot the Magpie", "0.99.132": "Badges that mean what they say", "0.99.131": "Repair all speaks up, the fire calls, bosses toughen up", "0.99.130": "Late nights, spread out", "0.99.129": "No more nights ending early", "0.99.128": "War Table and workshop tidy-ups", "0.99.127": "No more shoving into walls", "0.99.126": "Frost bites again", "0.99.125": "Tower nights: clearer, and the gunmen do the shooting", "0.99.124": "Controls brought up to date, and a controller pass", "0.99.123": "Late-game balance from play data", "0.99.122": "The Lamplighter's art is back", "0.99.121": "Dawn screen and camera fixes", "0.99.120": "Boss fights: towers already standing", "0.99.119": "Smoother shooting on busy nights", "0.99.118": "Gunmen are the gun's job", "0.99.117": "Gunmen stand out, and always go down hard", "0.99.116": "Gunmen make an entrance", "0.99.115": "Fixes", "0.99.114": "Gunmen in force", "0.99.113": "The Hollow's rock stops bullets", "0.99.112": "Fix: a night that wouldn't end", "0.99.111": "More gunmen on the Surface", "0.99.110": "Lookouts in every boss realm", "0.99.109": "The Glass Noon's cinders", "0.99.108": "More gunmen", "0.99.107": "The Forge's gun bench", "0.99.106": "Starter guns", "0.99.105": "Guns on a gamepad", "0.99.104": "Gun cards", "0.99.103": "Camps, kegs and shields", "0.99.102": "Celestial rounds", "0.99.101": "The boss levels answer to the gun", "0.99.100": "Day bosses are gun fights", "0.99.99": "Boss fights ask for both hands", "0.99.98": "The night's aim targets", "0.99.97": "Guns at night: charged shots", "0.99.96": "Guns on the Surface", "0.99.95": "DEV: the gun panel moves", "0.99.94": "DEV: chests spill guns", "0.99.93": "DEV: the Lamplighter's Sidearm", "0.99.92": "DEV: gun feel, again", "0.99.91": "DEV: two guns, each its own", "0.99.90": "DEV: gun sounds and gun deaths", "0.99.89": "DEV: guns that feel like guns", "0.99.88": "DEV: the gunmen", "0.99.87": "DEV: guns (the active slot prototype)", "0.99.86": "Getting back up", "0.99.85": "Blueprints from every boss, a shorter Long Day", "0.99.84": "The Bell Warden holds out longer", "0.99.83": "Any trophy of the tier builds the station", "0.99.82": "Dawn blessings fit their cards", "0.99.81": "The Many Faces: three new bosses join the runs", "0.99.80": "DEV: the Sleeping Town, reworked", "0.99.79": "DEV: the Bell Warden's tolls can be dodged", "0.99.78": "DEV: the Belfry makes you hide", "0.99.77": "DEV: the Belfry reworked", "0.99.76": "DEV: the Lantern Roofs at night", "0.99.75": "DEV: the Roofs rebuilt, clearer Belfry and Sleeping Town", "0.99.74": "DEV: the Night Mother", "0.99.73": "DEV: the Bell Warden", "0.99.72": "Depth", "0.99.71": "DEV: the Gilded Magpie", "0.99.70": "Two Long Nights", "0.99.69": "DEV: the Cinder Sun", "0.99.68": "Every run, a different road", "0.99.67": "The last nights", "0.99.66": "Day bosses come the day before", "0.99.65": "Boss days", "0.99.64": "Quicker Flare in boss fights", "0.99.63": "Surer footing", "0.99.62": "The Eclipse Rim", "0.99.61": "Know your enemy", "0.99.60": "The Maw's Throat", "0.99.59": "The Codex remembers", "0.99.58": "No more frozen levels", "0.99.57": "The Ashfield", "0.99.56": "The song waits for you", "0.99.55": "Placing banner fits", "0.99.54": "Clearer tower placing", "0.99.53": "Deeper focus", "0.99.52": "Steadier shadow", "0.99.51": "A shadow of your own", "0.99.50": "Arenas of their own", "0.99.49": "Boss days pay their way", "0.99.48": "The Silk Wood", "0.99.47": "No more embossing", "0.99.46": "Softer modern look", "0.99.45": "A modern look", "0.99.44": "Skystones", "0.99.43": "Easier ledges, softer Hand", "0.99.42": "The Hand, fairer", "0.99.41": "Ledges that wait for you", "0.99.40": "The Colossus's Flank", "0.99.39": "Bring your health", "0.99.38": "No skipping a boss day", "0.99.37": "Capital polish", "0.99.36": "The way back", "0.99.35": "The Wellstone", "0.99.34": "Cistern fix", "0.99.33": "The lantern stance", "0.99.32": "Faster Flare in boss fights", "0.99.31": "Boss day prototype", "0.99.30": "Blueprints you can see", "0.99.29": "Titan drawer", "0.99.28": "The Hollow pushes back", "0.99.27": "Bosses stand out", "0.99.26": "Six arenas", "0.99.25": "Dash and Flare in boss fights, fixed", "0.99.24": "Bosses read your range", "0.99.23": "Twenty nights", "0.99.22": "Bosses that last", "0.99.21": "No quiet before the fight", "0.99.20": "Boss fights auto-fire", "0.99.19": "DEV panel fits", "0.99.18": "Boss fight testing", "0.99.17": "The new boss fights", "0.99.16": "Dash or Flare?", "0.99.15": "Boss trial music, fixed", "0.99.14": "Boss trial music", "0.99.13": "Boss trial score card", "0.99.12": "A gentler first Surface", "0.99.11": "Spoils of the boss", "0.99.10": "Boss trials come alive", "0.99.9": "Encounter swirl", "0.99.8": "Boss trials for every boss", "0.99.7": "Boss trial: decrees, combos and the finishing blow", "0.99.6": "Boss trial towers, clearer", "0.99.5": "Boss trial tuning", "0.99.4": "Boss trial: towers and grades", "0.99.3": "Boss trial telegraphs", "0.99.2": "Boss trial arena", "0.99.1": "Boss trial demo builds", "0.99.0": "Wisps fix", "0.98.9": "Boss trial, round three", "0.98.8": "Boss trial, round two", "0.98.7": "Boss trial prototype", "0.98.6": "Every run counts", "0.98.5": "The deal, drawn like the Hollow", "0.98.4": "A quieter title", "0.98.3": "Simpler title", "0.98.2": "A gentler first run", "0.98.1": "Your gear on the record", "0.98.0": "Deeper means harder from the start", "0.97.7": "Complete run charts", "0.97.6": "The run recap shows your plan", "0.97.5": "No skipping the last stand", "0.97.4": "Blueprints in the run summary", "0.97.3": "Tidier notices", "0.97.2": "Tune-up", "0.97.1": "Shorter reach", "0.97.0": "Answer the blow", "0.96.1": "Flare cools down at night", "0.96.0": "The Hollow scouts you", "0.95.4": "Limit badge fits", "0.95.3": "Know your limits", "0.95.2": "Bats in the Dark", "0.95.1": "Slower Rotation", "0.95.0": "Early Pressure", "0.94.18": "Towers, Said Plainly", "0.94.17": "Picks on the Sheet", "0.94.16": "Sheet From the Pause Menu", "0.94.15": "Door Clear", "0.94.14": "Workshop Songs, As They Were", "0.94.13": "Surface Songs, As They Were", "0.94.12": "Pause When Away", "0.94.11": "Hearth and Forge", "0.94.10": "Scrolling Ledger", "0.94.9": "Smoother Loops", "0.94.8": "Moving On", "0.94.7": "Every Stat Explained", "0.94.6": "Hover Cards", "0.94.5": "What's Behind It", "0.94.4": "New Tracks", "0.94.3": "On Top", "0.94.2": "Remixed", "0.94.1": "The Lamplighter", "0.94.0": "The Ledger Tab", "0.93.2": "Live Bank", "0.93.1": "Find Them Fast", "0.93.0": "Branch Looks", "0.92.1": "Who Needs an Upgrade", "0.92.0": "Answers and Last Stands", "0.91.2": "Clash Spectacle", "0.91.1": "A New Run", "0.91.0": "The Hollow Regalia", "0.90.2": "Even Forging", "0.90.1": "Forge Fixes", "0.90.0": "The Forge", "0.89.6": "Nights End", "0.89.5": "Softer Bubble, Gentler Lash", "0.89.4": "Space, Not Spa", "0.89.3": "The Hollow Keeps Up", "0.89.2": "Hover Cards Everywhere", "0.89.1": "Sturdier Towers", "0.89.0": "Upgrades at the War Table", "0.88.3": "Summoners Tire, Plans Kept", "0.88.2": "The Ledger", "0.88.1": "Tool Belt", "0.88.0": "The Hollow Waits", "0.87.2": "Into the Armory", "0.87.1": "Out of the Way", "0.87.0": "Twin Cards", "0.86.3": "Routes on the Plan", "0.86.2": "Branches First", "0.86.1": "By the Village Fire", "0.86.0": "Plans at Dawn", "0.85.1": "What Happens If I'm Late?", "0.85.0": "A Gentler Climb", "0.84.0": "The Jukebox", "0.83.1": "Your Playlist", "0.83.0": "Frost Returns", "0.82.0": "Tower Feats", "0.81.2": "Keep the Light", "0.81.1": "Hard to Miss", "0.81.0": "Overtime", "0.80.7": "Smashed on the Plan", "0.80.6": "Clearer Threats", "0.80.5": "Soap Bubble", "0.80.4": "Lantern Ward", "0.80.3": "Plans Explained", "0.80.2": "Golems Move On", "0.80.1": "Burning Stride", "0.80.0": "New Hollows", "0.79.2": "Home Before Dusk", "0.79.1": "Field Plan", "0.79.0": "The War Table", "0.78.0": "Lantern Bubble", "0.77.5": "Night Relief", "0.77.4": "Clash Pace", "0.77.3": "Breathing Room", "0.77.2": "Just Crates", "0.77.1": "Fairer Middle", "0.77.0": "Weapon Verbs", "0.76.1": "Fit", "0.76.0": "Treasure Cards", "0.75.2": "Kept Blessings", "0.75.1": "Sunrise", "0.75.0": "New Cards", "0.74.1": "Unstuck", "0.74.0": "Streaming Music", "0.73.0": "Balance Pass", "0.72.2": "Glacier", "0.72.1": "Thaw, Again", "0.72.0": "Mend", "0.71.0": "Thaw", "0.70.3": "Clearer Fights", "0.70.2": "More to Answer", "0.70.0": "Score", "0.69.1": "Red Orbs", "0.69.0": "Stone and Wards", "0.68.1": "Closer Sun", "0.68.0": "Networks", "0.67.3": "Lighter Load", "0.67.2": "Tidy Title", "0.67.1": "Clear Ground", "0.67.0": "Old Grudges", "0.66.7": "Sorted", "0.66.6": "Fresh Face", "0.66.5": "A New Dawn, Refined", "0.66.4": "A New Dawn", "0.66.3": "All Over the Map", "0.66.2": "Room to Breathe", "0.66.1": "Hit Harder", "0.66.0": "Puzzle Pieces", "0.65.1": "Let It Play", "0.65.0": "No Escape", "0.64.3": "Easy to Spot", "0.64.2": "The Hollow Notices", "0.64.1": "New Music", "0.64.0": "Hold the Line", "0.63.0": "Stand Your Ground", "0.62.4": "Earlier Trouble", "0.62.3": "Short Runs Count", "0.62.2": "Clearer Settings", "0.62.1": "Into the Deep", "0.62.0": "Incoming From Everywhere", "0.61.0": "The Lone Sun", "0.60.1": "After Action", "0.60.0": "Deeper Pockets", "0.59.0": "Know Your Foe", "0.58.3": "Incoming!", "0.58.1": "Warmer Hearth", "0.58.0": "Branches and Bad Hides", "0.57.4": "A Harder First Week", "0.57.3": "The Hollow Wakes Early", "0.57.2": "No Shortcuts", "0.57.1": "Walls Worth Building", "0.57.0": "They Know Your Layout", "0.56.0": "Shape the Hollow", "0.55.0": "Out in the Tunnels", "0.54.0": "Tower Pairings", "0.53.0": "Oaths", "0.52.1": "A Satisfying Pick", "0.52.0": "Defend the Wayshrine", "0.51.0": "The Hollow Depths", "0.50.1": "The Dreaming Lands", "0.50.0": "Landmarks", "0.49.0": "Four Lands", "0.48.0": "Starbound", "0.47.3": "Tidy Title", "0.47.2": "Evenings at the Hearth", "0.47.1": "Home Fires", "0.47.0": "The Hearth", "0.46.0": "Shorter Nights", "0.45.5": "The Hollow Pushes Back", "0.45.4": "Master Crafter", "0.45.3": "Rationed Repairs", "0.45.2": "Tidy Dawn", "0.45.1": "Last Resort", "0.45.0": "Every Weapon Evolves", "0.44.2": "Pay to Patch", "0.44.1": "Familiar Faces", "0.44.0": "Gilded Hunters", "0.43.2": "Pixel Perfect Loot", "0.43.1": "Crack It Open", "0.43.0": "Wayside Lanterns", "0.42.1": "Steady Hands", "0.42.0": "Pick Up the Pace", "0.41.9": "Read the Chart", "0.41.8": "Who Did the Work", "0.41.7": "Fists Up", "0.41.6": "Guard Up", "0.41.5": "Victory Lap", "0.41.4": "Look Back", "0.41.3": "Stats Tab", "0.41.2": "Hover to Read", "0.41.1": "Second Wind on Record", "0.41.0": "Firewood", "0.40.10": "Track List Fix", "0.40.9": "Shuffle", "0.40.8": "New Music", "0.40.7": "Listening In", "0.40.6": "Loaded Dice", "0.40.5": "Locked Doors", "0.40.4": "Join Us", "0.40.3": "Leaner Start", "0.40.2": "Smoother Nights", "0.40.1": "Stepping Stones", "0.40.0": "Second Chances", "0.39.9": "Playtest Fixes", "0.39.8": "One by One", "0.39.7": "The Light Falters", "0.39.6": "Back to the Old Water", "0.39.5": "Calmer Glow", "0.39.4": "Unstuck", "0.39.3": "Still Waters", "0.39.2": "Pick Fix", "0.39.1": "Punch and Score", "0.39.0": "Boss Fights, Layered", "0.38.8": "Keep Your Distance", "0.38.7": "First Light Repairs", "0.38.6": "No Easy Nights", "0.38.5": "Clear Hits", "0.38.4": "Tidy Up", "0.38.3": "Middle Ground", "0.38.2": "Out of the Way", "0.38.1": "Back to the Dark", "0.38.0": "The Living Wood", "0.37.4": "Shelves and Shadows", "0.37.3": "Seeing Red", "0.37.2": "Two at a Time", "0.37.1": "Easier on the Surface", "0.37.0": "Thirty New Achievements", "0.36.0": "The Light Goes Out", "0.35.2": "Warning Signs", "0.35.1": "Parry Fix & Now Playing", "0.35.0": "Timber!", "0.34.0": "The Jukebox", "0.33.2": "Subtler Marker", "0.33.1": "Find Yourself", "0.33.0": "Keep Moving", "0.32.2": "Everyone Pitches In", "0.32.1": "Sustain Is a Build", "0.32.0": "No More Coasting", "0.31.2": "Clearer Surface Events", "0.31.1": "Settings Fix", "0.31.0": "Performance Mode", "0.30.2": "Trader Fix", "0.30.1": "Reroll Fix", "0.30.0": "The Village Helps", "0.29.0": "Surface Happenings", "0.28.0": "Elemental Hits", "0.27.1": "Radiance Glow-Up", "0.27.0": "The Hollow Pushes Back", "0.26.2": "Repair All", "0.26.1": "New Songs & Stripey's Lamplighter", "0.26.0": "The Oracle Update", "0.25.5": "SFX Volume", "0.25.4": "Sound Library", "0.25.3": "A New Lamplighter", "0.25.2": "The Wyrm Takes Wing", "0.25.1": "Every Boss Illustrated", "0.25.0": "The Gallery Update", "0.24.4": "A New Home", "0.24.3": "Patch Notes", "0.24.2": "Calmer Blight", "0.24.1": "Artist Preview", "0.24.0": "The Rising Dark", "0.23.9": "Close Calls", "0.23.8": "Items Window", "0.23.7": "Cards Fit", "0.23.5": "Blight You Can See", "0.23.4": "Auto-harvest", "0.23.3": "Walk-through Buildings", "0.23.2": "Mouse Bindings", "0.23.0": "The Storybook Update", "0.22.4": "Level-up Fix", "0.22.3": "Active Runs", "0.22.2": "Cleaner Title", "0.22.1": "Late-game Ease", "0.22.0": "The Recap Update", "0.21.0": "Field Notes", "0.20.0": "The Leaderboard Update", "0.19.0": "The Crossfire Update", "0.18.0": "The Titan Update", "0.17.0": "The Armory Update", "0.16.0": "The Hollow's Answer", "0.15.0": "The Menagerie Update", "0.14.0": "The Dodge Update", "0.13.0": "The Arsenal Update", "0.12.0": "The Legacy Update", "0.11.0": "Six Nights, No Repeats", "0.10.0": "The Evolution Update", "0.9.0": "Lore", "0.8.0": "The Clash"};   // version -> patch name (from patch_notes.txt at build time)
+const patchLines = { id: "patchLines", afterDatasetsDraw(c, _a, o) {
+  if (!o || !o.on || !o.marks || !o.marks.length) return;
+  const { ctx, chartArea: { top, bottom }, scales: { x } } = c;
+  const step = x.getPixelForValue(1) - x.getPixelForValue(0);
+  ctx.save(); ctx.setLineDash([3, 4]); ctx.lineWidth = 1; ctx.strokeStyle = "#cdb8ff88"; ctx.fillStyle = "#cdb8ff"; ctx.font = "10px Inter, system-ui, sans-serif";
+  for (const m of o.marks) {
+    const px = Math.round(x.getPixelForValue(m.i) - step / 2) + 0.5;
+    ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bottom); ctx.stroke();
+    ctx.save(); ctx.translate(px + 3, top + 3); ctx.rotate(Math.PI / 2); ctx.fillText(m.label, 0, 0); ctx.restore();
+  }
+  ctx.restore();
+} };
+const BANDS = [["night 1", "#ff5a5a"], ["nights 2-3", "#ff8a5a"], ["nights 4-6", "#ffb04a"], ["nights 7-10", "#ffd65a"], ["nights 11-15", "#c8e07a"], ["won", "#8af0d0"]];
+const bandOf = r => r.won ? 5 : r.night <= 1 ? 0 : r.night <= 3 ? 1 : r.night <= 6 ? 2 : r.night <= 10 ? 3 : 4;
+function retention(rs) {
+  const span = +$("#rtdays").value, first = rs.length ? Math.min(...rs.map(r => +new Date(r.start))) : Date.now();
+  const n = Math.max(1, Math.min(span, Math.ceil((Date.now() - first) / 864e5) + 1)), days = [];
+  for (let i = n - 1; i >= 0; i--) days.push(dayKey(Date.now() - i * 864e5));
+  const idx = Object.fromEntries(days.map((d, i) => [d, i]));
+  const bars = BANDS.map(() => new Array(days.length).fill(0)), mins = days.map(() => []);
+  const playDays = {};   // player -> the days they started a run
+  for (const r of rs) {
+    const d = dayKey(r.start);
+    if (r.name !== "(anonymous)") (playDays[r.name] = playDays[r.name] || new Set()).add(d);
+    if (!(d in idx)) continue;
+    bars[bandOf(r)][idx[d]]++;
+    if (+r.run_seconds > 0) mins[idx[d]].push(+r.run_seconds / 60);
+  }
+  const coh = days.map(() => [0, 0]);   // [new players that day, came back on a later day]
+  for (const [p, ds] of Object.entries(playDays)) {
+    const f = dayKey(FIRST[p]); if (!(f in idx)) continue;
+    coh[idx[f]][0]++; if ([...ds].some(d => d > f)) coh[idx[f]][1]++;
+  }
+  // release days: the first time each version shows up in the telemetry
+  const vfirst = {};
+  for (const e of EV) if (e.version && (!vfirst[e.version] || e.created_at < vfirst[e.version])) vfirst[e.version] = e.created_at;
+  const rel = {};
+  for (const [v, t] of Object.entries(vfirst)) { const d = dayKey(t); if (d in idx) (rel[d] = rel[d] || []).push(v); }
+  const marks = Object.entries(rel).map(([d, vs]) => { vs.sort((a, b) => vnum(a) - vnum(b)); const a = vs[0].split(".").pop(), b = vs[vs.length - 1].split(".").pop();
+    return { i: idx[d], d, vs, label: vs.length > 1 ? `${a}-${b}` : a }; }).sort((a, b) => a.i - b.i);
+  $("#rt_patches").innerHTML = marks.length ? marks.slice().reverse().map(m => `<div><b style="color:var(--violet)">${m.d.slice(5)}</b> · ${m.vs.map(v => "v" + v + (PATCHES[v] ? " " + escH(PATCHES[v]) : "")).join(" · ")}</div>`).join("") : "No patches in this range.";
+  const sets = BANDS.map(([l, c], i) => ({ type: "bar", label: l, data: bars[i], backgroundColor: c, stack: "runs", yAxisID: "y", order: 3 }));
+  sets.push({ type: "line", label: "median play time (min)", data: mins.map(a => a.length >= 3 ? Math.round(median(a)) : null), borderColor: "#b48cff", backgroundColor: "#b48cff",
+    yAxisID: "y2", pointRadius: 2, borderWidth: 2, cubicInterpolationMode: "monotone", spanGaps: true, order: 1 });
+  sets.push({ type: "line", label: "new players back another day (%)", data: coh.map(([a, b]) => a >= 3 ? Math.round(100 * b / a) : null), borderColor: "#5cffd8", backgroundColor: "#5cffd8",
+    borderDash: [6, 3], yAxisID: "y2", pointRadius: 2, borderWidth: 2, cubicInterpolationMode: "monotone", spanGaps: true, order: 2 });
+  mk("#c_ret", { data: { labels: days.map(d => d.slice(5)), datasets: sets }, plugins: [patchLines],
+    options: { maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
+      plugins: { legend: { labels: { boxWidth: 10 } }, patchLines: { on: $("#rtpatch").checked, marks },
+        tooltip: { callbacks: { footer: items => { const i = items[0].dataIndex, m = marks.find(k => k.i === i), c = coh[i];
+          return [`${bars.reduce((a, b) => a + b[i], 0)} runs`, mins[i].length ? `median play time ${Math.round(median(mins[i]))} min (${mins[i].length} timed)` : "", c[0] ? `${c[1]} of ${c[0]} new players came back` : "", m ? "patched: " + m.vs.map(v => "v" + v).join(", ") : ""].filter(Boolean); } } } },
+      scales: { x: { stacked: true, grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, autoSkipPadding: 8 } },
+        y: { stacked: true, title: { display: true, text: "runs started" }, ticks: { precision: 0 } },
+        y2: { position: "right", grid: { display: false }, title: { display: true, text: "minutes  ·  % back" }, min: 0 } } } });
+}
+
+function detail(id) {
+  const r = RUNS[id], ns = nightsOf(id), es = BYRUN[id];
+  $("#detail").style.display = "block";
+  $("#dtitle").textContent = `${r.name}'s run · v${r.version} · ${r.difficulty}${r.pace ? " · " + r.pace : ""}`;
+  $("#dsub").textContent = `${r.won ? "Won" + (r.endless ? " night " + r.runLen + ", then endless to night " + r.endless : "") : r.ended ? "Fell on night " + r.reached + (r.cause ? " (" + r.cause + ")" : "") : "In progress, night " + r.reached} · level ${r.level} · ${r.downs} downs${r.rises ? " · rose again " + r.rises + "×" : ""} · ${r.platform || ""} · last played ${fmtDate(r.last)}`;
+  const L = (f, label, c, axis = "y") => ({ label, data: ns.map(n => ({ x: n.n, y: f(n) })).filter(p => p.y != null), borderColor: c, backgroundColor: c, yAxisID: axis, pointRadius: 2, borderWidth: 2 });
+  const c1 = lineCfg([L(n => n.level, "hero level", "#ffd65a"), L(n => n.threat, "threat ×", "#ff7a6a", "y2"), L(n => n.clash_mult, "boss ×", "#b48cff", "y2")], "level");
+  c1.options.scales.y2 = { position: "right", grid: { display: false }, title: { display: true, text: "×" } };
+  mk("#dc1", c1);
+  mk("#dc2", lineCfg([L(n => n.night_min_hp != null ? n.night_min_hp * 100 : null, "night low HP %", "#ff7a6a"), L(n => n.day_min_hp != null ? n.day_min_hp * 100 : null, "day low HP %", "#ffb04a"),
+    L(n => n.ember_max ? 100 * n.ember / n.ember_max : null, "Hollowlight %", "#8af0d0")], "%", { min: 0, max: 100 }));
+  $("#dnights").innerHTML = "<thead><tr><th>Night</th><th>Lv</th><th>Threat</th><th>Boss×</th><th>Kills</th><th>Leaks</th><th>Light</th><th>Low HP n/d</th><th>Dmg taken</th><th>Hero dmg%</th><th>Gold</th><th>Towers</th><th>Abilities</th><th>Event</th></tr></thead><tbody>" +
+    ns.map(n => { const t = sum(n.dmg_dealt); return `<tr><td>${n.n}${n.rose ? ' <span class="tag rose">↑ rose' + (n.rose > 1 ? " ×" + n.rose : "") + '</span>' : ""}</td><td>${n.level}</td><td>${(n.threat || 1).toFixed(2)}</td><td>${(n.clash_mult || 1).toFixed(2)}</td><td>${n.kills}</td><td>${n.leaks}</td>
+      <td>${n.ember}/${n.ember_max}</td><td>${Math.round(100 * (n.night_min_hp ?? 1))}% / ${Math.round(100 * (n.day_min_hp ?? 1))}%</td><td>${Math.round(sum(n.dmg_taken))}</td>
+      <td>${t ? Math.round(100 * ((n.dmg_dealt.hero || 0) + (n.dmg_dealt.gun || 0)) / t) : "-"}%</td><td>${n.gold}</td><td>${Object.entries(n.towers || {}).map(([a, b]) => a + "×" + b).join(" ")}</td>
+      <td>${(n.slots || []).join(", ")}</td><td>${n.event || ""}</td></tr>`; }).join("") + "</tbody>";
+  $("#dpicks").innerHTML = es.filter(e => e.kind === "pick").map(e => `<span class="pill">${e.data.picked} <i>lv${e.data.level}</i></span>`).join("") || empty("none");
+  $("#ditems").innerHTML = es.filter(e => e.kind === "item").map(e => `<span class="pill">${e.data.picked} <i>${e.data.rarity} n${nightNo(r, e.day)}</i></span>`).join("") || empty("none");
+  $("#devents").innerHTML = es.filter(e => ["clash", "titan", "down", "close_call"].includes(e.kind)).map(e => {
+    const d = e.data;
+    if (e.kind === "clash") return `<span class="pill">⚔ ${d.boss} <i>${d.won ? "won" : "lost"} ${d.seconds}s n${nightNo(r, e.day)}</i></span>`;
+    if (e.kind === "titan") return `<span class="pill">◆ ${d.titan} <i>${d.slain ? "slain" : "met"} n${nightNo(r, e.day)}</i></span>`;
+    if (e.kind === "down") return `<span class="pill" style="border-color:#ff7a6a">✖ down <i>${d.by} · ${d.area} · n${nightNo(r, e.day)}</i></span>`;
+    return `<span class="pill">! close call <i>${d.what} ${Math.round(100 * d.frac)}% · ${d.by || ""} · ${d.area || ""} n${nightNo(r, e.day)}</i></span>`; }).join("") || empty("none");
+  $("#detail").scrollIntoView({ behavior: "smooth" });
+}
+
+function start() {
+  if (window.Chart) { Chart.defaults.color = "#a39aae"; Chart.defaults.borderColor = "#2a2535"; Chart.defaults.font.family = "Inter, system-ui, sans-serif"; }
+  for (const id of ["#fver", "#fdiff", "#fpace", "#fname", "#flive", "#fanon", "#fallc"]) $(id).onchange = () => { RUN_SHOW = 100; render(); };
+  for (const id of ["#rtdays", "#rtpatch"]) $(id).onchange = () => retention(SEL.size ? filtered().filter(r => SEL.has(r.run_id)) : filtered());
+  let st; $("#rsearch").oninput = () => { clearTimeout(st); st = setTimeout(() => { RUN_SHOW = 100; runsTable(filtered()); }, 150); };
+  $("#rmore").onclick = () => { RUN_SHOW += 100; runsTable(filtered()); };
+  $("#reload").onclick = async () => { await idb.del("events"); location.reload(); };
+  load().catch(e => { $("#status").textContent = "couldn't load data: " + e.message; $("#loadbar").style.opacity = 0; });
+}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+</script></body></html>
