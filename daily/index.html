@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hollowlight Daily</title>
+<meta name="description" content="A random run made fresh each day. Every player gets the same one. The leaderboard tracks each day and resets daily.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hollowlight">
+<meta property="og:title" content="Hollowlight Daily">
+<meta property="og:description" content="Today's run - the same for everyone. See the board, then play it.">
+<meta property="og:image" content="https://hollowlightgame.com/daily/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://hollowlightgame.com/daily/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hollowlight Daily">
+<meta name="twitter:description" content="Today's run - the same for everyone. See the board, then play it.">
+<meta name="twitter:image" content="https://hollowlightgame.com/daily/og.png">
+<meta name="theme-color" content="#0d0a14">
+<link rel="preconnect" href="https://ugluevzmupcacioqrmpe.supabase.co" crossorigin>
+<style>
+:root{--bg:#0d0a14;--panel:#17121f;--line:#3a2f4a;--text:#f2e8d0;--dim:#9a90a8;--gold:#ffd65a;--teal:#8af0d0;--ember:#ffb04a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 ui-monospace,Consolas,monospace}
+.wrap{max-width:760px;margin:0 auto;padding:28px 16px 48px}
+h1{font-size:28px;margin:0;color:var(--gold);letter-spacing:.04em}
+.sub{color:var(--dim);margin:4px 0 18px}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+button,input{font:inherit;background:var(--panel);color:var(--text);border:1px solid var(--line);padding:4px 10px;border-radius:2px}
+button:hover{border-color:var(--gold)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line)}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--dim);font-weight:normal;font-size:12px;text-transform:uppercase}
+td.n{text-align:right}tr.top td{color:var(--gold)}
+.tbl{overflow-x:auto}
+.msg{color:var(--dim);padding:14px 0}
+.play{display:inline-block;margin-top:18px;color:var(--bg);background:var(--gold);padding:8px 16px;text-decoration:none;font-weight:bold}
+</style></head><body><div class="wrap">
+<h1>HOLLOWLIGHT DAILY</h1>
+<div class="sub">A random run made fresh each day. Every player gets the same one. The leaderboard tracks each day and resets daily.</div>
+<div class="bar"><button id="prev">&lt;</button><input id="date" type="date"><button id="next">&gt;</button><span id="count" class="sub" style="margin:0"></span></div>
+<div class="tbl"><table><thead><tr><th>#</th><th>Name</th><th class="n">Score</th><th>Nights</th><th class="n">Time</th><th>Class</th><th>Streak</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div id="msg" class="msg">Loading...</div>
+<a class="play" href="https://hollowlightgame.com/">Play today's daily</a>
+</div>
+<script>
+const SB="https://ugluevzmupcacioqrmpe.supabase.co",KEY="sb_publishable_imUXB0NUYQoNJwzLnrJdYw_7FMtFwwi";
+const today=new Date().toISOString().slice(0,10);
+const q=new URLSearchParams(location.search);let d=(q.get("d")||today);if(!/^\d{4}-\d{2}-\d{2}$/.test(d))d=today;
+const $=id=>document.getElementById(id);
+function shift(s,n){const t=new Date(s+"T00:00:00Z");t.setUTCDate(t.getUTCDate()+n);return t.toISOString().slice(0,10)}
+function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+// the game's own score and order (Data.daily_score, Leaderboard.daily_rank - 0.99.482, Mark 2026-11-15): every row re-scored
+// (nights cleared past 11 x10000, a win 25000, bosses x3000, kills, downs x-1000); practice rows out; a win, then the night
+// reached, then score, then time; a run's farthest row
+const DS={night:10000,win:25000,boss:3000,down:1000,kill:1,start:11};
+function dscore(r){return Math.max(0,Math.round(Math.max(0,(r.days|0)-DS.start)*DS.night+(r.won===true?DS.win:0)+(r.bosses|0)*DS.boss+(r.kills|0)*DS.kill-(r.downs|0)*DS.down))}
+function ahead(a,b){return ((b.won===true)-(a.won===true))||((b.days|0)-(a.days|0))||((b.score|0)-(a.score|0))||((a.run_seconds|0)-(b.run_seconds|0))}
+function rank(rows){const best={};for(const r of rows){if(r.try&&r.try!=="ranked")continue;r.score=dscore(r);const id=r.run_id||(r.name+"|"+r.created_at);
+ if(!best[id]||ahead(r,best[id])<0)best[id]=r}
+ return Object.values(best).sort(ahead)}
+async function load(){
+ $("date").value=d;$("next").disabled=d>=today;history.replaceState(null,"","?d="+d);
+ $("rows").innerHTML="";$("msg").textContent="Loading...";$("count").textContent="";
+ const sel="name,score,days,won,kills,downs,bosses,run_seconds,run_id,in_progress,created_at,streak:build->>streak,cls:build->>cls,try:build->>try";
+ try{const res=await fetch(SB+"/rest/v1/runs?select="+sel+"&build->>daily=eq."+d+"&order=score.desc&limit=500",{headers:{apikey:KEY}});
+  if(!res.ok)throw new Error(res.status);const rows=rank(await res.json());
+  $("count").textContent=rows.length?rows.length+" played":"";
+  $("msg").textContent=rows.length?"":"No one has played the "+d+" daily yet.";
+  $("rows").innerHTML=rows.map((r,i)=>{const s=r.run_seconds|0;
+   return `<tr class="${i<3?"top":""}"><td>${i+1}</td><td>${esc(r.name)}</td><td class="n">${(r.score|0).toLocaleString()}</td>`+
+   `<td>${r.won?"15 WON":esc(r.days)+(r.in_progress?"*":"")}</td><td class="n">${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}</td>`+
+   `<td>${r.cls==="knight"?"Knight":"Lamplighter"}</td><td>${(r.streak|0)>0?esc(r.streak):""}</td></tr>`}).join("");
+ }catch(e){$("msg").textContent="Couldn't reach the leaderboard."}}
+$("prev").onclick=()=>{d=shift(d,-1);load()};$("next").onclick=()=>{if(d<today){d=shift(d,1);load()}};
+$("date").onchange=e=>{if(e.target.value){d=e.target.value>today?today:e.target.value;load()}};
+load();
+</script></body></html>
