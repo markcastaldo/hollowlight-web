@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title>Hollowlight</title>
+		<style>
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	color: white;
+	background-color: black;
+	overflow: hidden;
+	touch-action: none;
+}
+
+#canvas {
+	display: block;
+}
+
+#canvas:focus {
+	outline: none;
+}
+
+#status, #status-splash, #status-progress {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+#status, #status-splash {
+	top: 0;
+	bottom: 0;
+}
+
+#status {
+	background-color: #242424;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	visibility: hidden;
+}
+
+#status-splash {
+	max-height: 100%;
+	max-width: 100%;
+	margin: auto;
+}
+
+#status-splash.show-image--false {
+	display: none;
+}
+
+#status-splash.fullsize--true {
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+}
+
+#status-splash.use-filter--false {
+	image-rendering: pixelated;
+}
+
+#status-progress, #status-notice {
+	display: none;
+}
+
+#status-progress {
+	bottom: 10%;
+	width: 50%;
+	margin: 0 auto;
+}
+
+#status-notice {
+	background-color: #5b3943;
+	border-radius: 0.5rem;
+	border: 1px solid #9b3943;
+	color: #e0e0e0;
+	font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+	line-height: 1.3;
+	margin: 0 2rem;
+	overflow: hidden;
+	padding: 1rem;
+	text-align: center;
+	z-index: 1;
+}
+		</style>
+		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
+<script>/* FILE CACHE (2026-11-15; a returning player re-downloaded ~47 MB after every update - the engine unchanged for weeks - and LibreWolf, with no disk cache, on every reload): the page keeps index.wasm and index.pck in the browser's Cache Storage under the fingerprints tools/web_stamp.py stamps into it at deploy; a match loads from storage, a new fingerprint downloads and drops the old copy. The page always asks for the exact files it was built with - never a stale pack. No Cache API, or any error: the network, as before. */(function(){var K={'index.pck':'d12ff9a3d0f45fa1','index.wasm':'f9ee32b87996b009'},CN='hl-files';if(!window.caches||!window.fetch)return;var of=window.fetch.bind(window);window.fetch=function(input,init){try{var url=typeof input==='string'?input:(input&&input.url)||'';var name=String(url).split('?')[0].split('/').pop();var k=K[name];if(!k||k.indexOf('__HL')===0||(init&&init.method&&init.method!=='GET'))return of(input,init);var key=new URL(name+'?fp='+k,location.href).href;return caches.open(CN).then(function(c){return c.match(key).then(function(hit){if(hit)return hit;return of(input,init).then(function(r){if(r&&r.status===200){c.put(key,r.clone()).then(function(){return c.keys()}).then(function(ks){(ks||[]).forEach(function(q){if(q.url!==key&&new URL(q.url).pathname.split('/').pop()===name)c.delete(q)})}).catch(function(){})}return r})})}).catch(function(){return of(input,init)})}catch(e){return of(input,init)}}})()</script><script>/* CRASH REPORT (Mark 2026-11-15, after the LibreWolf reports): when the engine dies before or during play, send one anonymous web_crash event (kind added to events_sane in tools/supabase_hardening.sql) with the error, the last console lines and the browser's WebGL limits - no names, no saves. Once per page load. 0.99.534 is stamped by tools/deploy_pages.sh. */(function(){var VER='0.99.534',URL='https://ugluevzmupcacioqrmpe.supabase.co/rest/v1/events',KEY='sb_publishable_imUXB0NUYQoNJwzLnrJdYw_7FMtFwwi';var log=[],sent=false,t0=Date.now(),rid='web-'+Math.random().toString(36).slice(2,12);function s(a){try{return Array.prototype.map.call(a,function(x){return x instanceof Error?(x.name+': '+x.message):String(x)}).join(' ').slice(0,240)}catch(e){return '?'}}['log','warn','error'].forEach(function(k){var o=console[k];console[k]=function(){log.push((k==='log'?'':k+': ')+s(arguments));if(log.length>40)log.shift();if(k==='error')check(arguments);return o.apply(console,arguments)}});function fatal(m){return /RuntimeError|index out of bounds|indirect call|memory access out of bounds|unreachable|out of memory|Aborted/i.test(m)}function check(a){var m=s(a);for(var i=0;i<a.length;i++){if(a[i]&&a[i].name==='RuntimeError'){send(a[i]);return}}if(fatal(m))send(m)}addEventListener('error',function(e){var m=(e.error&&e.error.name?e.error.name+': ':'')+(e.message||'');if(fatal(m))send(e.error||m)});addEventListener('unhandledrejection',function(e){var r=e.reason,m=r&&r.message?(r.name+': '+r.message):String(r);if(fatal(m))send(r||m)});function gl(){var o={};try{var c=document.createElement('canvas').getContext('webgl2');if(!c)return{webgl2:false};o.max_tex=c.getParameter(c.MAX_TEXTURE_SIZE);o.max_rb=c.getParameter(c.MAX_RENDERBUFFER_SIZE);var x=c.getExtension('WEBGL_debug_renderer_info');o.renderer=String(x?c.getParameter(x.UNMASKED_RENDERER_WEBGL):c.getParameter(c.RENDERER)).slice(0,120);var l=c.getExtension('WEBGL_lose_context');if(l)l.loseContext()}catch(e){o.err=String(e).slice(0,80)}return o}function send(err){if(sent)return;sent=true;try{var d={error:(err&&err.name?err.name+': '+err.message:String(err)).slice(0,300),stack:String(err&&err.stack||'').slice(0,600),log:log.slice(-30),ua:navigator.userAgent.slice(0,200),secs:Math.round((Date.now()-t0)/1000),dpr:window.devicePixelRatio,win:innerWidth+'x'+innerHeight,host:location.hostname,glcap:!!document.getElementById('hl-glcap'),gl:gl()};var u=window.HL_CRASH_URL||URL;if(location.protocol==='file:'&&!window.HL_CRASH_URL)return;fetch(u,{method:'POST',keepalive:true,headers:{'apikey':KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({run_id:rid,kind:'web_crash',day:0,version:VER.slice(0,16),platform:'web',data:d})}).catch(function(){})}catch(e){}}})()</script><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PHT8BH2B72"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PHT8BH2B72');
+</script>
+<style>html,body{width:100%;height:100%;margin:0;overflow:hidden}#canvas{position:fixed;left:0;top:0;width:100%!important;height:100%!important;display:block}#hl-mobile{position:fixed;inset:0;z-index:9999;background:#0d0a12;color:#f0d9a8;font:17px/1.5 sans-serif;text-align:center;padding:28vh 24px 0;box-sizing:border-box}#hl-mobile b{display:block;font-size:22px;margin-bottom:12px;color:#ffd65a}#hl-mobile a{display:inline-block;margin-top:34px;color:#8a7d9a;font-size:13px;text-decoration:underline;cursor:pointer}</style><script>/* NOT ON MOBILE (Mark 2026-11-15: "for now ... say 'this game is not compatible with mobile devices and needs a desktop browser' instead of doing touch controls"): a device whose only pointer is a finger (no mouse / trackpad - touchscreen laptops and tablets with a mouse pass) gets the notice, and the big downloads (index.wasm / index.pck) wait behind it - a phone isn't made to fetch ~47 MB it can't use. A small 'try anyway' lets a tablet with a controller through. Replaces the old 'Rotate your phone' notice. */(function(){var mm=function(q){try{return window.matchMedia&&matchMedia(q).matches}catch(e){return false}};var touchOnly=mm('(pointer: coarse)')&&!mm('(any-pointer: fine)');if(!touchOnly)return;var go=null,held=new Promise(function(r){go=r});var of=window.fetch;window.fetch=function(input,init){var u=String(typeof input==='string'?input:(input&&input.url)||'').split('?')[0];if(u.slice(-11)==='/index.wasm'||u.slice(-10)==='/index.pck'||u==='index.wasm'||u==='index.pck')return held.then(function(){return of.call(window,input,init)});return of.apply(this,arguments)};addEventListener('DOMContentLoaded',function(){var d=document.createElement('div');d.id='hl-mobile';d.innerHTML='<b>Desktop only</b>This game is not compatible with mobile devices and needs a desktop browser.<br><a>try anyway</a>';d.querySelector('a').onclick=function(){d.remove();go()};document.body.appendChild(d)})})()</script>
+<script>addEventListener('DOMContentLoaded',function(){var c=document.getElementById('canvas');if(!c||!window.MutationObserver)return;new MutationObserver(function(){document.documentElement.style.cursor=c.style.cursor}).observe(c,{attributes:true,attributeFilter:['style']})})</script>
+<script>/* CANVAS SIZE (canvas_resize_policy None): the canvas fills the window by CSS and its drawing buffer is set here to the device pixels it covers: its CSS size x devicePixelRatio, snapped to the exact device-pixel-content-box (ResizeObserver) when that agrees within a pixel and a half (Safari has none; a zoomed Firefox can report a stale one). Godot's Adaptive policy sized the buffer from innerWidth x devicePixelRatio while the CSS above sized the element: at a fractional zoom or display scale they disagree (Godot #108013). Godot follows canvas.width/height every frame. */
+addEventListener('DOMContentLoaded',function(){var c=document.getElementById('canvas');if(!c)return;
+var MX=(function(){try{var g=document.createElement('canvas').getContext('webgl2');if(!g)return 16384;var v=g.getParameter(g.MAX_VIEWPORT_DIMS);var m=Math.min(g.getParameter(g.MAX_TEXTURE_SIZE),g.getParameter(g.MAX_RENDERBUFFER_SIZE),v[0],v[1]);var x=g.getExtension('WEBGL_lose_context');if(x)x.loseContext();return m>0?m:16384}catch(e){return 16384}})();/* BUFFER CAP (LibreWolf crash 2026-11-15): Firefox resistFingerprinting reports devicePixelRatio 2 but caps WebGL textures at 2048, so the main render target failed (status 36054) and the engine died with index out of bounds - the buffer is scaled down to fit; Godot maps the mouse by canvas.width / rect.width, so input still lines up. *//* RES CAP (PROTOTYPE 2026-11-17, tmp/webperf; OFF unless asked: ?hlmaxh=<px> in the address or localStorage hl_maxh): a 4K screen made the buffer 3840x2160 - every frame drawn at 36x the 640x360 art. Over the cap the buffer is the device size divided by a WHOLE number d (2160 -> 1080 at a 1440 cap) and the browser scales it back up x d with image-rendering: pixelated - the pixel art stays exactly as crisp (each art pixel n x d device pixels), only smooth edges are coarser. *//* MAINLINE (2026-11-18): the cap is ON by default at 1440 - 4K draws at 1080p x2, 1440p and below untouched; ?hlmaxh=0 or the DEV row off (localStorage hl_maxh 0) = full size. */var MAXH=1440;try{var q=/[?&]hlmaxh=([0-9]+)/.exec(location.search);var ls=localStorage.getItem('hl_maxh');MAXH=q?+q[1]:(ls!==null&&ls!==''?+ls:1440)}catch(e){}
+function put(w,h){var s=Math.min(1,MX/w,MX/h);w=Math.max(1,Math.floor(w*s));h=Math.max(1,Math.floor(h*s));if(MAXH>0&&h>MAXH){var d=Math.ceil(h/MAXH);w=Math.max(1,Math.floor(w/d));h=Math.max(1,Math.floor(h/d));c.style.imageRendering='pixelated'}else if(c.style.imageRendering){c.style.imageRendering=''}if(c.width!==w||c.height!==h){c.width=w;c.height=h}}
+var last=null;
+function measure(){var r=c.getBoundingClientRect(),d=window.devicePixelRatio||1,w=r.width*d,h=r.height*d;if(last&&Math.abs(last.inlineSize-w)<=1.5&&Math.abs(last.blockSize-h)<=1.5){w=last.inlineSize;h=last.blockSize}put(w,h)}
+if(window.ResizeObserver){var ro=new ResizeObserver(function(es){var p=es[es.length-1].devicePixelContentBoxSize;last=p&&p[0]?p[0]:null;measure()});try{ro.observe(c,{box:'device-pixel-content-box'})}catch(err){ro.observe(c)}}
+function onScale(){measure();if(window.matchMedia){var m=matchMedia('(resolution: '+(window.devicePixelRatio||1)+'dppx)');if(m.addEventListener)m.addEventListener('change',onScale,{once:true})}}
+addEventListener('resize',measure);onScale();
+/* RES STEP (PROTOTYPE, tmp/webperf): the game (WebRes.step, on a low frame rate, before Performance mode) asks for the cap for this visit only: 0 = nothing to do (the buffer is already 1440 tall or less, or capped). */window.hlResStep=function(){if(MAXH>0||c.height<=1440)return 0;MAXH=1440;measure();return c.height};/* RES CAP from the DEV panel (rel493, WebRes.set_cap): set / clear the cap now and keep it in this browser. */window.hlResCap=function(h){MAXH=Math.max(0,h|0);try{localStorage.setItem('hl_maxh',''+MAXH)}catch(e){}measure();return c.height};window.hlResCapH=function(){return MAXH}})</script>
+<script>/* WEBGL TOO SMALL (LibreWolf report 2026-11-15): privacy browsers (LibreWolf, Tor, Firefox resist fingerprinting) cap WebGL textures at 2048; the sprite sheets are up to 14960 wide (hero2 2880), so the engine dies with index out of bounds. Show how to allow the site instead of the crash. */addEventListener('DOMContentLoaded',function(){var m=16384;try{var g=document.createElement('canvas').getContext('webgl2');if(g){m=g.getParameter(g.MAX_TEXTURE_SIZE);var x=g.getExtension('WEBGL_lose_context');if(x)x.loseContext()}}catch(e){}if(!(m>0&&m<=2048))return;var d=document.createElement('div');d.id='hl-glcap';d.style.cssText='position:fixed;inset:0;z-index:1000;background:#141018;color:#e8dcc8;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font:16px/1.5 Arial,sans-serif';d.innerHTML='<div style="max-width:560px"><b style="font-size:22px">Hollowlight can&#39;t start in this browser</b><br><br>Your browser&#39;s fingerprinting protection (LibreWolf, Tor Browser, or Firefox with resist fingerprinting) limits the graphics the game needs.<br><br>To play here: open <b>about:config</b>, find <b>privacy.resistFingerprinting.exemptedDomains</b>, add <b>'+location.hostname+'</b> (comma-separated), then reload.<br><br>Or play in another browser such as Firefox or Chrome.</div>';document.body.appendChild(d)})</script><script>/* POINTER ENTER: Godot ignores mouse moves while it thinks the pointer is outside the canvas (set by the canvas mouseleave, cleared only by a mouseover). A mouseleave with no mouseover after it froze the hover where the pointer last was. A move that lands on the canvas proves the pointer is inside: re-send the mouseover first. */
+addEventListener('DOMContentLoaded',function(){var c=document.getElementById('canvas');if(!c)return;var inside=true;
+c.addEventListener('mouseover',function(){inside=true},true);c.addEventListener('mouseleave',function(){inside=false},true);
+addEventListener('mousemove',function(e){if(!inside&&e.target===c){inside=true;c.dispatchEvent(new MouseEvent('mouseover',{bubbles:true,clientX:e.clientX,clientY:e.clientY}))}},true)})</script>
+<script>/* F11 TO THE BROWSER (Mark 2026-11-08: F11 didn't fullscreen the site): Godot's key handler on the canvas calls preventDefault on every key, so the browser never saw F11. Stopped here, before the canvas, it stays the browser's. */
+['keydown','keyup'].forEach(function(t){addEventListener(t,function(e){if(e.key==='F11'||e.code==='F11'){e.stopImmediatePropagation()}},true)})</script>
+	</head>
+	<body>
+		<canvas id="canvas">
+			Your browser does not support the canvas tag.
+		</canvas>
+
+		<noscript>
+			Your browser does not support JavaScript.
+		</noscript>
+
+		<div id="status">
+			<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="index.png" alt="">
+			<progress id="status-progress"></progress>
+			<div id="status-notice"></div>
+		</div>
+
+		<script src="index.js"></script>
+		<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":34132664,"index.wasm":23368383},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_THREADS_ENABLED = false;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	const statusOverlay = document.getElementById('status');
+	const statusProgress = document.getElementById('status-progress');
+	const statusNotice = document.getElementById('status-notice');
+
+	let initializing = true;
+	let statusMode = '';
+
+	function setStatusMode(mode) {
+		if (statusMode === mode || !initializing) {
+			return;
+		}
+		if (mode === 'hidden') {
+			statusOverlay.remove();
+			initializing = false;
+			return;
+		}
+		statusOverlay.style.visibility = 'visible';
+		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
+		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+		statusMode = mode;
+	}
+
+	function setStatusNotice(text) {
+		while (statusNotice.lastChild) {
+			statusNotice.removeChild(statusNotice.lastChild);
+		}
+		const lines = text.split('\n');
+		lines.forEach((line) => {
+			statusNotice.appendChild(document.createTextNode(line));
+			statusNotice.appendChild(document.createElement('br'));
+		});
+	}
+
+	function displayFailureNotice(err) {
+		console.error(err);
+		if (err instanceof Error) {
+			setStatusNotice(err.message);
+		} else if (typeof err === 'string') {
+			setStatusNotice(err);
+		} else {
+			setStatusNotice('An unknown error occurred.');
+		}
+		setStatusMode('notice');
+		initializing = false;
+	}
+
+	const missing = Engine.getMissingFeatures({
+		threads: GODOT_THREADS_ENABLED,
+	});
+
+	if (missing.length !== 0) {
+		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+			let serviceWorkerRegistrationPromise;
+			try {
+				serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
+			} catch (err) {
+				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+			}
+			// There's a chance that installing the service worker would fix the issue
+			Promise.race([
+				serviceWorkerRegistrationPromise.then((registration) => {
+					if (registration != null) {
+						return Promise.reject(new Error('Service worker already exists.'));
+					}
+					return registration;
+				}).then(() => engine.installServiceWorker()),
+				// For some reason, `getRegistration()` can stall
+				new Promise((resolve) => {
+					setTimeout(() => resolve(), 2000);
+				}),
+			]).then(() => {
+				// Reload if there was no error.
+				window.location.reload();
+			}).catch((err) => {
+				console.error('Error while registering service worker:', err);
+			});
+		} else {
+			// Display the message as usual
+			const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
+			displayFailureNotice(missingMsg + missing.join('\n'));
+		}
+	} else {
+		setStatusMode('progress');
+		engine.startGame({
+			'onProgress': function (current, total) {
+				if (current > 0 && total > 0) {
+					statusProgress.value = current;
+					statusProgress.max = total;
+				} else {
+					statusProgress.removeAttribute('value');
+					statusProgress.removeAttribute('max');
+				}
+			},
+		}).then(() => {
+			setStatusMode('hidden');
+		}, displayFailureNotice);
+	}
+}());
+		</script>
+	</body>
+</html>
+
